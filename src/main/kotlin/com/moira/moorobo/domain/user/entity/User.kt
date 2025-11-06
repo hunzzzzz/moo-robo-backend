@@ -2,7 +2,7 @@ package com.moira.moorobo.domain.user.entity
 
 import com.moira.moorobo.global.entity.BaseEntity
 import jakarta.persistence.*
-import java.util.UUID
+import java.util.*
 
 @Entity
 @Table(name = "USER", schema = "MOO_ROBO")
@@ -14,6 +14,9 @@ class User(
     @Column(name = "name", nullable = false)
     var name: String,
 
+    @Column(name = "nickname", nullable = false, unique = true)
+    var nickname: String,
+
     @Column(name = "email", nullable = false, unique = true)
     var email: String,
 
@@ -22,6 +25,6 @@ class User(
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
-    var role: UserRole
+    var role: UserRole = UserRole.STUDENT
 ) : BaseEntity() {
 }
