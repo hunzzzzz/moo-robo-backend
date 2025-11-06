@@ -2,6 +2,8 @@ package com.moira.moorobo.domain.user.service
 
 import com.moira.moorobo.domain.user.dto.request.SignupRequest
 import com.moira.moorobo.domain.user.repository.UserRepository
+import com.moira.moorobo.global.exception.ErrorCode
+import com.moira.moorobo.global.exception.MooRoboException
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -14,14 +16,14 @@ class SignupService(
     @Transactional(readOnly = true)
     fun checkNickname(nickname: String) {
         if (userRepository.existsUserByNickname(nickname)) {
-            throw RuntimeException("닉네임 중복") // TODO
+            throw MooRoboException(ErrorCode.ALREADY_USING_NICKNAME)
         }
     }
 
     @Transactional(readOnly = true)
     fun checkEmail(email: String) {
         if (userRepository.existsUserByEmail(email)) {
-            throw RuntimeException("이메일 중복") // TODO
+            throw MooRoboException(ErrorCode.ALREADY_USING_EMAIL)
         }
     }
 
