@@ -1,7 +1,8 @@
 package com.moira.moorobo.domain.user.entity
 
-import com.moira.moorobo.global.entity.BaseEntity
+import com.moira.moorobo.global.utility.BaseEntity
 import jakarta.persistence.*
+import java.time.ZonedDateTime
 import java.util.*
 
 @Entity
@@ -25,6 +26,12 @@ class User(
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
-    var role: UserRole = UserRole.STUDENT
+    var role: UserRole = UserRole.STUDENT,
+
+    @Column(name = "rtk", columnDefinition = "TEXT", nullable = true)
+    var rtk: String? = null,
+
+    @Column(name = "last_login_at", nullable = true)
+    var lastLoginAt: ZonedDateTime? = null
 ) : BaseEntity() {
 }

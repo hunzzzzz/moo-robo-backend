@@ -1,6 +1,7 @@
 package com.moira.moorobo.domain.auth.controller
 
 import com.moira.moorobo.domain.auth.dto.request.LoginRequest
+import com.moira.moorobo.domain.auth.dto.response.LoginResponse
 import com.moira.moorobo.domain.auth.service.LoginService
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
@@ -20,9 +21,9 @@ class LoginController(
         @RequestBody request: LoginRequest,
         httpServletRequest: HttpServletRequest,
         httpServletResponse: HttpServletResponse
-    ): ResponseEntity<Nothing> {
-        loginService.login(request, httpServletRequest, httpServletResponse)
+    ): ResponseEntity<LoginResponse> {
+        val loginResponse = loginService.login(request, httpServletRequest, httpServletResponse)
 
-        return ResponseEntity.ok().body(null)
+        return ResponseEntity.ok().body(loginResponse)
     }
 }
