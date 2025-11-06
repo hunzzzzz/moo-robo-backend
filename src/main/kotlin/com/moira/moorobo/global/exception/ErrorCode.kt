@@ -21,4 +21,9 @@ enum class ErrorCode(val code: String, val message: String, val httpStatus: Http
         message = "이미 사용 중인 이메일입니다.",
         httpStatus = HttpStatus.BAD_REQUEST
     ),
+    LOGIN_ERROR(
+        code = "U0003",
+        message = "이메일 혹은 비밀번호를 잘못 입력하였습니다.",
+        httpStatus = HttpStatus.BAD_REQUEST
+    ),
 }
