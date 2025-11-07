@@ -34,18 +34,23 @@ enum class ErrorCode(val code: String, val message: String, val httpStatus: Http
 
     // 유저 관련 에러코드
     ALREADY_USING_NICKNAME(
-    code = "U0001",
-    message = "이미 사용 중인 닉네임입니다.",
-    httpStatus = HttpStatus.BAD_REQUEST
+        code = "U0001",
+        message = "이미 사용 중인 닉네임입니다.",
+        httpStatus = HttpStatus.BAD_REQUEST
     ),
     ALREADY_USING_EMAIL(
-    code = "U0002",
-    message = "이미 사용 중인 이메일입니다.",
-    httpStatus = HttpStatus.BAD_REQUEST
+        code = "U0002",
+        message = "이미 사용 중인 이메일입니다.",
+        httpStatus = HttpStatus.BAD_REQUEST
     ),
     LOGIN_ERROR(
-    code = "U0003",
-    message = "이메일 혹은 비밀번호를 잘못 입력하였습니다.",
-    httpStatus = HttpStatus.BAD_REQUEST
+        code = "U0003",
+        message = "이메일 혹은 비밀번호를 잘못 입력하였습니다.",
+        httpStatus = HttpStatus.BAD_REQUEST
     ),
+    USER_NOT_FOUND(
+        code = "U0004",
+        message = "존재하지 않는 유저입니다.",
+        httpStatus = HttpStatus.BAD_REQUEST
+    )
 }
