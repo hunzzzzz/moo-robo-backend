@@ -28,11 +28,13 @@ class JwtAuthenticationFilter(
 ) : OncePerRequestFilter() {
     private val log = LoggerFactory.getLogger(JwtAuthenticationFilter::class.java)
 
-    private val EXCLUDE_REQUEST_MATCHERS = listOf(
-        PathPatternRequestMatcher.withDefaults().matcher(HttpMethod.GET, "/api/signup/**"),
-        PathPatternRequestMatcher.withDefaults().matcher(HttpMethod.POST, "/api/signup/**"),
-        PathPatternRequestMatcher.withDefaults().matcher(HttpMethod.POST, "/api/login/**")
-    )
+    companion object {
+        val EXCLUDE_REQUEST_MATCHERS = listOf(
+            PathPatternRequestMatcher.withDefaults().matcher(HttpMethod.GET, "/api/signup/**"),
+            PathPatternRequestMatcher.withDefaults().matcher(HttpMethod.POST, "/api/signup/**"),
+            PathPatternRequestMatcher.withDefaults().matcher(HttpMethod.POST, "/api/login/**")
+        );
+    }
 
     private fun sendErrorResponse(
         response: HttpServletResponse,
