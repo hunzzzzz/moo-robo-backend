@@ -15,7 +15,6 @@ interface QuestionRepository : JpaRepository<Question, Long> {
                 "Q.title AS title, " +
                 "Q.content AS content, " +
                 "Q.viewCount AS viewCount, " +
-                "Q.aiAnswer AS aiAnswer, " +
                 "Q.createdAt AS createdAt, " +
                 "Q.updatedAt AS updatedAt, " +
                 "U.id AS userId, " +

@@ -52,5 +52,17 @@ enum class ErrorCode(val code: String, val message: String, val httpStatus: Http
         code = "U0004",
         message = "존재하지 않는 유저입니다.",
         httpStatus = HttpStatus.BAD_REQUEST
+    ),
+
+    // 질문 관련 에러 코드
+    QUESTION_NOT_FOUND(
+        code = "Q00001",
+        message = "존재하지 않는 질문입니다.",
+        httpStatus = HttpStatus.BAD_REQUEST
+    ),
+    NOT_YOUR_QUESTION(
+        code = "Q00002",
+        message = "본인의 질문만 삭제 혹은 수정할 수 있습니다.",
+        httpStatus = HttpStatus.UNAUTHORIZED
     )
 }

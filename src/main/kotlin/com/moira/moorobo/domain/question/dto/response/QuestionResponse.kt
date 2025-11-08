@@ -8,7 +8,6 @@ data class QuestionResponse(
     val title: String,
     val content: String,
     val viewCount: Int,
-    val aiAnswer: Boolean,
     val createdAt: ZonedDateTime,
     val updatedAt: ZonedDateTime,
 
