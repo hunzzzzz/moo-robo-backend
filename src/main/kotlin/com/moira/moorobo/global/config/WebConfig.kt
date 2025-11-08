@@ -12,7 +12,7 @@ class WebConfig(
 ) : WebMvcConfigurer {
     override fun addCorsMappings(registry: CorsRegistry) {
         registry.addMapping("/**")
-            .allowedOrigins("http://localhost:3000", "https://moo-robo.lovable.app")
+            .allowedOrigins("http://localhost:3000", "https://moorobo.lovable.app")
             .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
             .allowCredentials(true)
             .allowedHeaders("*")
