@@ -3,6 +3,7 @@ package com.moira.moorobo.domain.question.service
 import com.moira.moorobo.domain.question.QuestionRepository
 import com.moira.moorobo.domain.question.dto.request.QuestionAddRequest
 import com.moira.moorobo.domain.question.dto.request.QuestionUpdateRequest
+import com.moira.moorobo.domain.question.dto.response.QuestionDetailResponse
 import com.moira.moorobo.domain.question.dto.response.QuestionResponse
 import com.moira.moorobo.global.dto.SimpleUserAuth
 import com.moira.moorobo.global.exception.ErrorCode
@@ -29,6 +30,12 @@ class QuestionService(
         val user = entityFinder.findUserById(simpleUserAuth.userId)
 
         return questionRepository.findAllByUser(user)
+    }
+
+    @Transactional(readOnly = true)
+    fun getQuestion(questionId: Long): QuestionDetailResponse {
+        return questionRepository.findByQuestionId(questionId)
+            ?: throw MooRoboException(ErrorCode.QUESTION_NOT_FOUND)
     }
 
     @Transactional
