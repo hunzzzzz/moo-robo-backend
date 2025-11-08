@@ -11,19 +11,22 @@ import org.springframework.stereotype.Repository
 @Repository
 interface QuestionRepository : JpaRepository<Question, Long> {
     @Query(
-        "SELECT new com.moira.moorobo.domain.question.dto.response.QuestionResponse(" +
-                "Q.id AS questionId," +
-                "Q.title AS title, " +
-                "Q.content AS content, " +
-                "Q.viewCount AS viewCount, " +
-                "Q.createdAt AS createdAt, " +
-                "Q.updatedAt AS updatedAt, " +
-                "U.id AS userId, " +
-                "U.nickname AS nickname " +
-                ") " +
-                "FROM Question Q " +
-                "INNER JOIN User U ON U = Q.user " +
-                "WHERE Q.user = :user"
+        """
+        SELECT new com.moira.moorobo.domain.question.dto.response.QuestionResponse(
+            Q.id AS questionId,
+            Q.title,
+            Q.content,
+            Q.viewCount,
+            Q.createdAt,
+            Q.updatedAt,
+            U.id AS userId,
+            U.nickname,
+            (SELECT COUNT(A.id) FROM Answer A WHERE A.question = Q) AS answerCount
+        )
+        FROM Question Q
+        INNER JOIN User U ON U = Q.user
+        WHERE Q.user = :user
+    """
     )
     fun findAllByUser(user: User): List<QuestionResponse>
 

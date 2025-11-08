@@ -13,5 +13,8 @@ data class QuestionResponse(
 
     // user
     val userId: String,
-    val nickname: String
+    val nickname: String,
+
+    // answer
+    val answerCount: Long
 )
