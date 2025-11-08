@@ -24,5 +24,8 @@ class Question(
 
     @Column(name = "view_count", nullable = false)
     var viewCount: Int = 0,
+
+    @Column(name = "ai_answer", nullable = false)
+    var aiAnswer: Boolean = false,
 ) : BaseEntity() {
 }

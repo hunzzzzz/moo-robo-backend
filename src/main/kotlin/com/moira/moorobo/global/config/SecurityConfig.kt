@@ -30,7 +30,7 @@ class SecurityConfig(
         http
             // 1. CSRF, CORS, Login, Basic 인증 비활성화
             .csrf { it.disable() }
-            .cors { it.disable() }
+            .cors { }
             .formLogin { it.disable() }
             .httpBasic { it.disable() }
             // 2. 세션 관리: STATELESS (JWT 기반이므로)
@@ -38,6 +38,7 @@ class SecurityConfig(
             // 3. 인가 규칙 설정
             .authorizeHttpRequests { authorize ->
                 authorize
+                    .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                     .requestMatchers(HttpMethod.GET, "/api/signup/**").permitAll()
                     .requestMatchers(HttpMethod.POST, "/api/signup/**").permitAll()
                     .requestMatchers(HttpMethod.POST, "/api/login/**").permitAll()
