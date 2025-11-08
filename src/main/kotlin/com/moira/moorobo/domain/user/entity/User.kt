@@ -10,7 +10,7 @@ import java.util.*
 class User(
     @Id
     @Column(name = "id", nullable = false, unique = true)
-    var id: String? = UUID.randomUUID().toString(),
+    var id: String = UUID.randomUUID().toString(),
 
     @Column(name = "name", nullable = false)
     var name: String,

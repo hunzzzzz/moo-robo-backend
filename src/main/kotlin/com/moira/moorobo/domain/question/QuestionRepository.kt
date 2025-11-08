@@ -44,4 +44,6 @@ interface QuestionRepository : JpaRepository<Question, Long> {
                 "WHERE Q.id = :questionId"
     )
     fun findByQuestionId(questionId: Long): QuestionDetailResponse?
+
+    fun countByUser(user: User): Int
 }
