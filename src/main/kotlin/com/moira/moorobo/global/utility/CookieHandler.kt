@@ -1,30 +1,57 @@
 package com.moira.moorobo.global.utility
 
-import jakarta.servlet.http.Cookie
+import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
+import org.springframework.http.HttpHeaders
+import org.springframework.http.ResponseCookie
 import org.springframework.stereotype.Component
 
 @Component
 class CookieHandler {
+    /**
+     * maxAge           : 쿠키 유효 시간 (단위: 초)
+     * path("/")        : 쿠키를 사용할 수 있는 경로
+     * httpOnly(true)   : JavaScript에서 접근 불가능
+     * secure(true)     : HTTPS 연결에서만 전송
+     * sameSite("None") : CORS 문제 해결
+     */
+    fun hasQuestionIdInCookie(request: HttpServletRequest, questionId: Long): Boolean {
+        return request.cookies?.any { it.name == "question$questionId" } ?: false
+    }
+
+    fun putQuestionIdInCookie(response: HttpServletResponse, questionId: Long) {
+        val cookie = ResponseCookie.from("question$questionId", questionId.toString())
+            .maxAge(60 * 60 * 3L)
+            .path("/")
+            .httpOnly(true)
+            .secure(true)
+            .sameSite("None")
+            .build()
+
+        response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString())
+    }
+
     fun putRtkInCookie(response: HttpServletResponse, rtk: String?) {
-        val cookie = Cookie("refreshToken", rtk)
+        val cookie = ResponseCookie.from("refreshToken", rtk)
+            .maxAge(60 * 60 * 24L)
+            .path("/")
+            .httpOnly(true)
+            .secure(true)
+            .sameSite("None")
+            .build()
 
-        // cookie.setSecure(true);   // HTTPS 연결에서만 전송 (운영 환경에서는 주석 해제)
-        cookie.isHttpOnly = true     // JavaScript로 접근 불가능
-        cookie.path = "/"            // 모든 경로에서 쿠키 사용 가능
-        cookie.maxAge = 60 * 60 * 24 // 1일
-
-        response.addCookie(cookie)
+        response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString())
     }
 
     fun removeRtkFromCookie(response: HttpServletResponse) {
-        val cookie = Cookie("refreshToken", null)
+        val cookie = ResponseCookie.from("refreshToken")
+            .maxAge(0)
+            .path("/")
+            .httpOnly(true)
+            .secure(true)
+            .sameSite("None")
+            .build()
 
-        // cookie.setSecure(true); // HTTPS 연결에서만 전송 (운영 환경에서는 주석 해제)
-        cookie.isHttpOnly = true   // JavaScript로 접근 불가능
-        cookie.path = "/"          // 모든 경로에서 쿠키 사용 가능
-        cookie.maxAge = 0          // 쿠키 만료
-
-        response.addCookie(cookie)
+        response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString())
     }
 }

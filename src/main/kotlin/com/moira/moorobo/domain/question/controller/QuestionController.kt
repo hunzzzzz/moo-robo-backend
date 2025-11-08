@@ -7,6 +7,8 @@ import com.moira.moorobo.domain.question.dto.response.QuestionResponse
 import com.moira.moorobo.domain.question.service.QuestionService
 import com.moira.moorobo.global.auth.UserPrincipal
 import com.moira.moorobo.global.dto.SimpleUserAuth
+import jakarta.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletResponse
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
@@ -34,9 +36,15 @@ class QuestionController(
 
     @GetMapping("/questions/{questionId}")
     fun getQuestion(
-        @PathVariable questionId: Long
+        @PathVariable questionId: Long,
+        httpServletRequest: HttpServletRequest,
+        httpServletResponse: HttpServletResponse
     ): ResponseEntity<QuestionDetailResponse> {
-        val response = questionService.getQuestion(questionId)
+        val response = questionService.getQuestion(
+            questionId = questionId,
+            httpServletRequest = httpServletRequest,
+            httpServletResponse = httpServletResponse
+        )
 
         return ResponseEntity.ok(response)
     }

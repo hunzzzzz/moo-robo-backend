@@ -8,12 +8,16 @@ import com.moira.moorobo.domain.question.dto.response.QuestionResponse
 import com.moira.moorobo.global.dto.SimpleUserAuth
 import com.moira.moorobo.global.exception.ErrorCode
 import com.moira.moorobo.global.exception.MooRoboException
+import com.moira.moorobo.global.utility.CookieHandler
 import com.moira.moorobo.global.utility.EntityFinder
+import jakarta.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletResponse
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
 class QuestionService(
+    private val cookieHandler: CookieHandler,
     private val entityFinder: EntityFinder,
     private val questionRepository: QuestionRepository
 ) {
@@ -32,8 +36,21 @@ class QuestionService(
         return questionRepository.findAllByUser(user)
     }
 
-    @Transactional(readOnly = true)
-    fun getQuestion(questionId: Long): QuestionDetailResponse {
+    @Transactional
+    fun getQuestion(
+        httpServletRequest: HttpServletRequest,
+        httpServletResponse: HttpServletResponse,
+        questionId: Long
+    ): QuestionDetailResponse {
+        // [1] questionId 쿠키가 존재하지 않으면 조회수 1 증가 및 쿠키 추가
+        if (!cookieHandler.hasQuestionIdInCookie(request = httpServletRequest, questionId = questionId)) {
+            val question = entityFinder.findQuestionById(questionId)
+            question.viewCount += 1
+
+            cookieHandler.putQuestionIdInCookie(response = httpServletResponse, questionId = questionId)
+        }
+
+        // [2] 게시글 조회
         return questionRepository.findByQuestionId(questionId)
             ?: throw MooRoboException(ErrorCode.QUESTION_NOT_FOUND)
     }
