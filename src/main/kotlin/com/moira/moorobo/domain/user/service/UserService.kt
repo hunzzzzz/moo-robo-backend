@@ -1,6 +1,6 @@
 package com.moira.moorobo.domain.user.service
 
-import com.moira.moorobo.domain.question.QuestionRepository
+import com.moira.moorobo.domain.question.repository.QuestionRepository
 import com.moira.moorobo.domain.user.dto.request.SignupRequest
 import com.moira.moorobo.domain.user.dto.response.UserResponse
 import com.moira.moorobo.domain.user.repository.UserRepository

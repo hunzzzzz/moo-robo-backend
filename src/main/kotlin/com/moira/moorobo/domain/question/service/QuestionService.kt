@@ -1,6 +1,6 @@
 package com.moira.moorobo.domain.question.service
 
-import com.moira.moorobo.domain.question.QuestionRepository
+import com.moira.moorobo.domain.question.repository.QuestionRepository
 import com.moira.moorobo.domain.question.dto.request.QuestionAddRequest
 import com.moira.moorobo.domain.question.dto.request.QuestionUpdateRequest
 import com.moira.moorobo.domain.question.dto.response.QuestionDetailResponse

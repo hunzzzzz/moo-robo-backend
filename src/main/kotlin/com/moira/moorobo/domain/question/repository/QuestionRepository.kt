@@ -1,4 +1,4 @@
-package com.moira.moorobo.domain.question
+package com.moira.moorobo.domain.question.repository
 
 import com.moira.moorobo.domain.question.dto.response.QuestionDetailResponse
 import com.moira.moorobo.domain.question.dto.response.QuestionResponse

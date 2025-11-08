@@ -1,6 +1,6 @@
 package com.moira.moorobo.global.utility
 
-import com.moira.moorobo.domain.question.QuestionRepository
+import com.moira.moorobo.domain.question.repository.QuestionRepository
 import com.moira.moorobo.domain.user.repository.UserRepository
 import com.moira.moorobo.global.exception.ErrorCode
 import com.moira.moorobo.global.exception.MooRoboException
