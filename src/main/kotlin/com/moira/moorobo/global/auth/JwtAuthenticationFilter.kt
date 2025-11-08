@@ -100,22 +100,22 @@ class JwtAuthenticationFilter(
             }
             .onFailure {
                 when (it) {
-                    ExpiredJwtException::class -> {
+                    is ExpiredJwtException -> {
                         this.sendErrorResponse(response = response, errorCode = ErrorCode.EXPIRED_ATK)
                         return
                     }
 
-                    SignatureException::class -> {
+                    is SignatureException -> {
                         this.sendErrorResponse(response = response, errorCode = ErrorCode.INVALID_SIGNATURE)
                         return
                     }
 
-                    UnsupportedJwtException::class -> {
+                    is UnsupportedJwtException -> {
                         this.sendErrorResponse(response = response, errorCode = ErrorCode.INVALID_TOKEN)
                         return
                     }
 
-                    MalformedJwtException::class -> {
+                    is MalformedJwtException -> {
                         this.sendErrorResponse(response = response, errorCode = ErrorCode.INVALID_TOKEN)
                         return
                     }
