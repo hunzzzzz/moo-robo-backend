@@ -6,6 +6,7 @@ import com.moira.moorobo.domain.user.repository.UserRepository
 import com.moira.moorobo.global.exception.ErrorCode
 import com.moira.moorobo.global.exception.MooRoboException
 import com.moira.moorobo.global.utility.CookieHandler
+import com.moira.moorobo.global.utility.EntityFinder
 import com.moira.moorobo.global.utility.JwtProvider
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
@@ -18,6 +19,7 @@ import java.time.ZonedDateTime
 @Service
 class LoginService(
     private val cookieHandler: CookieHandler,
+    private val entityFinder: EntityFinder,
     private val jwtProvider: JwtProvider,
     private val loginHistoryService: LoginHistoryService,
     private val passwordEncoder: PasswordEncoder,
@@ -34,8 +36,7 @@ class LoginService(
         val userAgent = httpServletRequest.getHeader(HttpHeaders.USER_AGENT)
 
         // [2] 이메일로 유저 조회
-        val user = userRepository.findUserByEmail(request.email)
-            ?: throw MooRoboException(ErrorCode.LOGIN_ERROR)
+        val user = entityFinder.findUserByEmail(request.email)
 
         // [3-1] 비밀번호가 일치하지 않으면, 로그인 실패 기록 저장
         // [3-2] 비밀번호가 일치하면,       로그인 성공 기록 저장
