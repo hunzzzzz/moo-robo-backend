@@ -71,7 +71,7 @@ class QuestionController(
     @PutMapping("/questions/{questionId}")
     fun updateQuestion(
         @UserPrincipal simpleUserAuth: SimpleUserAuth,
-        @RequestBody request: QuestionUpdateRequest,
+        @ModelAttribute request: QuestionUpdateRequest,
         @PathVariable questionId: Long
     ): ResponseEntity<Nothing> {
         questionService.updateQuestion(simpleUserAuth, request, questionId)

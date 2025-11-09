@@ -19,9 +19,15 @@ interface QuestionFileRepository : JpaRepository<QuestionFile, String> {
         )
         FROM QuestionFile QF
         WHERE QF.question.id = :questionId
+        ORDER BY QF.createdAt DESC
     """
     )
     fun findAllQuestionFileByQuestionId(questionId: Long): List<QuestionFileResponse>
 
+    @Query("SELECT QF.fileUrl FROM QuestionFile QF WHERE QF.question.id = :questionId")
+    fun findAllQuestionFileUrlByQuestionId(questionId: Long): List<String>
+
     fun findQuestionFileByQuestionIdAndId(questionId: Long, id: String): QuestionFile?
+
+    fun deleteAllQuestionFileByQuestionId(questionId: Long)
 }

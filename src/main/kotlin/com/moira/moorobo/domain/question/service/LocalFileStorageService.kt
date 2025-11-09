@@ -66,6 +66,7 @@ class LocalFileStorageService(
 
             // [3] 파일 시스템에 저장
             file.transferTo(targetPath.toFile())
+            log.info("파일 저장 성공: {}", targetPath)
 
             // [4] DB 저장을 위한 DTO 반환
             return FileDto(
@@ -94,11 +95,37 @@ class LocalFileStorageService(
                 return resource
             } else {
                 log.error("파일을 찾을 수 없거나 읽을 수 없습니다: {}", fileUrl)
-                throw MooRoboException(ErrorCode.QUESTION_FILE_NOT_FOUND)
+                throw MooRoboException(ErrorCode.FILE_NOT_FOUND)
             }
         } catch (e: Exception) {
             log.error("파일 로드 실패: {}", e.message, e)
             throw MooRoboException(ErrorCode.FILE_LOAD_FAILED)
+        }
+    }
+
+    fun deleteFile(fileUrl: String) {
+        try {
+            // [1] DB에 저장된 파일 경로를 Path로 변환
+            val filePath = Paths.get(fileUrl).normalize()
+
+            // [2] 파일이 설정된 업로드 디렉터리 내에 있는지 확인
+            // fileUrl에 경로 조작을 넣어 서버의 민감한 파일을 삭제하는 것을 방지
+            if (!filePath.startsWith(this.fileStorageLocation)) {
+                log.warn("보안 위험: 삭제 요청 경로가 지정된 업로드 위치를 벗어납니다. {}", fileUrl)
+                throw MooRoboException(ErrorCode.FILE_DELETE_FORBIDDEN)
+            }
+
+            // [3] 파일 삭제
+            val isDeleted = Files.deleteIfExists(filePath)
+
+            if (isDeleted) {
+                log.info("파일 삭제 성공: {}", filePath)
+            } else {
+                log.error("파일 삭제 실패. 파일이 존재하지 않습니다: {}", filePath)
+            }
+        } catch (e: Exception) {
+            log.error("파일 로드 실패: {}", e.message, e)
+            throw MooRoboException(ErrorCode.FILE_DELETE_FAILED)
         }
     }
 }

@@ -27,7 +27,7 @@ class EntityFinder(
 
     fun findQuestionFileByQuestionIdAndId(questionId: Long, fileId: String) =
         questionFileRepository.findQuestionFileByQuestionIdAndId(questionId = questionId, id = fileId)
-            ?: throw MooRoboException(ErrorCode.QUESTION_FILE_NOT_FOUND)
+            ?: throw MooRoboException(ErrorCode.FILE_NOT_FOUND)
 
     fun findAnswerById(answerId: Long) = answerRepository.findByIdOrNull(answerId)
         ?: throw MooRoboException(ErrorCode.ANSWER_NOT_FOUND)

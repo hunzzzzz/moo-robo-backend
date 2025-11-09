@@ -1,6 +1,7 @@
 package com.moira.moorobo.domain.question.entity
 
 import jakarta.persistence.*
+import java.time.ZonedDateTime
 
 @Entity
 @Table(name = "QUESTION_FILE", schema = "MOO_ROBO")
@@ -23,6 +24,9 @@ class QuestionFile(
     var size: Long,
 
     @Column(name = "file_url", nullable = false)
-    var fileUrl: String
+    var fileUrl: String,
+
+    @Column(name = "created_at", nullable = false)
+    val createdAt: ZonedDateTime = ZonedDateTime.now()
 ) {
 }

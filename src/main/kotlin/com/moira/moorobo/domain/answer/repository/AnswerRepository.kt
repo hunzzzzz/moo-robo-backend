@@ -24,4 +24,6 @@ interface AnswerRepository : JpaRepository<Answer, Long> {
     """
     )
     fun getAllAnswerByQuestionId(questionId: Long): List<AnswerResponse>
+
+    fun deleteAllAnswerByQuestionId(questionId: Long)
 }

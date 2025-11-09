@@ -110,9 +110,19 @@ enum class ErrorCode(val code: String, val message: String, val httpStatus: Http
         message = "파일 로드에 실패하였습니다. 새로고침 후 다시 시도해주세요.",
         httpStatus = HttpStatus.INTERNAL_SERVER_ERROR
     ),
-    QUESTION_FILE_NOT_FOUND(
+    FILE_DELETE_FAILED(
         code = "Q0011",
+        message = "파일 삭제에 실패하였습니다.",
+        httpStatus = HttpStatus.INTERNAL_SERVER_ERROR
+    ),
+    FILE_NOT_FOUND(
+        code = "Q0012",
         message = "존재하지 않는 파일입니다.",
         httpStatus = HttpStatus.BAD_REQUEST
+    ),
+    FILE_DELETE_FORBIDDEN(
+        code = "Q0013",
+        message = "해당 디렉터리 경로에 접근할 수 없습니다.",
+        httpStatus = HttpStatus.FORBIDDEN
     )
 }

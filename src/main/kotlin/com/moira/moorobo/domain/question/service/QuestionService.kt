@@ -1,5 +1,6 @@
 package com.moira.moorobo.domain.question.service
 
+import com.moira.moorobo.domain.answer.repository.AnswerRepository
 import com.moira.moorobo.domain.answer.service.AnswerService
 import com.moira.moorobo.domain.question.dto.request.QuestionAddRequest
 import com.moira.moorobo.domain.question.dto.request.QuestionUpdateRequest
@@ -29,6 +30,7 @@ class QuestionService(
     private val activeProfile: String,
 
     private val answerService: AnswerService,
+    private val answerRepository: AnswerRepository,
     private val cookieHandler: CookieHandler,
     private val entityFinder: EntityFinder,
     private val fileValidator: FileValidator,
@@ -132,10 +134,34 @@ class QuestionService(
             throw MooRoboException(ErrorCode.NOT_YOUR_QUESTION)
         }
 
-        // [2] 수정
+        // [2] Question 관련 정보 수정
         question.title = request.title
         question.content = request.content
         question.aiAnswer = request.aiAnswer
+
+        // [3] 파일 저장
+        request.newFiles?.map { file ->
+            // [3-1] 로컬 환경에서는 로컬 파일 환경에 저장
+            if ("local".equals(activeProfile, ignoreCase = true)) {
+                val fileInfo = localFileStorageService.saveFile(file = file, targetDir = "questions")
+                val questionFile = fileInfo.toQuestionFile(question = question)
+
+                questionFileRepository.save(questionFile)
+            }
+            // [3-2] 배포 환경에서는 AWS S3에 저장
+            // TODO
+        }
+
+        // [4] 파일 삭제
+        request.deleteFiles?.map { fileId ->
+            val questionFile = entityFinder.findQuestionFileByQuestionIdAndId(
+                questionId = questionId,
+                fileId = fileId
+            )
+
+            localFileStorageService.deleteFile(questionFile.fileUrl) // 파일 시스템
+            questionFileRepository.delete(questionFile) // DB
+        }
     }
 
     @Transactional
@@ -147,7 +173,15 @@ class QuestionService(
             throw MooRoboException(ErrorCode.NOT_YOUR_QUESTION)
         }
 
-        // [2] 삭제
+        // [2] 파일 삭제
+        val fileUrls = questionFileRepository.findAllQuestionFileUrlByQuestionId(questionId)
+        fileUrls.map { fileUrl ->
+            localFileStorageService.deleteFile(fileUrl)
+        }
+
+        // [3] QuestionFile, Answer, Question 삭제
+        questionFileRepository.deleteAllQuestionFileByQuestionId(questionId)
+        answerRepository.deleteAllAnswerByQuestionId(questionId)
         questionRepository.delete(question)
     }
 }
