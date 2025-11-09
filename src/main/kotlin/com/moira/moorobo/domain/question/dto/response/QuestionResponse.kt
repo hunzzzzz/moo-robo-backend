@@ -16,5 +16,8 @@ data class QuestionResponse(
     val nickname: String,
 
     // answer
-    val answerCount: Long
+    val answerCount: Long,
+
+    // like
+    val likeCount: Long
 )

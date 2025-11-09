@@ -17,5 +17,6 @@ data class QuestionDetailDbResponse(
     val nickname: String,
 
     // like
+    val likeCount: Long,
     val hasLike: Long
 )

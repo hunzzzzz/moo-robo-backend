@@ -21,7 +21,8 @@ interface QuestionRepository : JpaRepository<Question, Long> {
             Q.updatedAt,
             U.id AS userId,
             U.nickname,
-            (SELECT COUNT(A.id) FROM Answer A WHERE A.question = Q) AS answerCount
+            (SELECT COUNT(A.id) FROM Answer A WHERE A.question = Q) AS answerCount,
+            (SELECT COUNT(QL.id) FROM QuestionLike QL WHERE QL.question = Q) AS likeCount
         )
         FROM Question Q
         INNER JOIN User U ON U.id = Q.user.id
@@ -43,6 +44,7 @@ interface QuestionRepository : JpaRepository<Question, Long> {
             Q.updatedAt,
             U.id AS userId,
             U.nickname,
+            (SELECT COUNT(QL.id) FROM QuestionLike QL WHERE QL.question = Q) AS likeCount,
             (SELECT COUNT(QL.id) FROM QuestionLike QL WHERE QL.question = Q AND QL.user.id = :userId) AS hasLike
         )
         FROM Question Q
