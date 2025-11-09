@@ -1,4 +1,4 @@
-package com.moira.moorobo.global.utility
+package com.moira.moorobo.global.auth
 
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse

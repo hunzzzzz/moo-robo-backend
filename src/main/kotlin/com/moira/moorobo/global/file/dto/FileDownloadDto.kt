@@ -1,4 +1,4 @@
-package com.moira.moorobo.global.dto
+package com.moira.moorobo.global.file.dto
 
 import org.springframework.core.io.Resource
 

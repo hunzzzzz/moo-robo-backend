@@ -1,14 +1,16 @@
-package com.moira.moorobo.global.utility
+package com.moira.moorobo.global.auth
 
 import com.moira.moorobo.domain.user.entity.User
-import com.moira.moorobo.global.dto.TokenResponse
+import com.moira.moorobo.global.auth.dto.TokenResponse
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
 import jakarta.annotation.PostConstruct
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
-import java.util.*
+import java.util.Base64
+import java.util.Date
+import java.util.HashMap
 import javax.crypto.SecretKey
 
 @Component
@@ -65,5 +67,5 @@ class JwtProvider(
     }
 
     fun validateToken(token: String): Result<Claims> =
-        kotlin.runCatching { Jwts.parser().verifyWith(key).build().parseSignedClaims(token).payload }
+        runCatching { Jwts.parser().verifyWith(key).build().parseSignedClaims(token).payload }
 }

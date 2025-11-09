@@ -1,4 +1,4 @@
-package com.moira.moorobo.global.utility
+package com.moira.moorobo.global.jpa
 
 import com.moira.moorobo.domain.answer.repository.AnswerRepository
 import com.moira.moorobo.domain.like.repository.QuestionLikeRepository

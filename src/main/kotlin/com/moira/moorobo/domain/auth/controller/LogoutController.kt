@@ -2,7 +2,7 @@ package com.moira.moorobo.domain.auth.controller
 
 import com.moira.moorobo.domain.auth.service.LogoutService
 import com.moira.moorobo.global.auth.UserPrincipal
-import com.moira.moorobo.global.dto.SimpleUserAuth
+import com.moira.moorobo.global.auth.dto.SimpleUserAuth
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping

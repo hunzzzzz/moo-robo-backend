@@ -1,4 +1,4 @@
-package com.moira.moorobo.global.utility
+package com.moira.moorobo.global.jpa
 
 import jakarta.persistence.Column
 import jakarta.persistence.EntityListeners

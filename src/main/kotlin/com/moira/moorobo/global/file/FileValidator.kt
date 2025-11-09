@@ -1,4 +1,4 @@
-package com.moira.moorobo.global.utility
+package com.moira.moorobo.global.file
 
 import com.moira.moorobo.global.exception.ErrorCode
 import com.moira.moorobo.global.exception.MooRoboException

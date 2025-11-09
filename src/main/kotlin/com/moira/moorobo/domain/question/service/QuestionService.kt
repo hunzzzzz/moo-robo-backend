@@ -9,13 +9,14 @@ import com.moira.moorobo.domain.question.dto.response.QuestionIdResponse
 import com.moira.moorobo.domain.question.dto.response.QuestionResponse
 import com.moira.moorobo.domain.question.repository.QuestionFileRepository
 import com.moira.moorobo.domain.question.repository.QuestionRepository
-import com.moira.moorobo.global.dto.FileDownloadDto
-import com.moira.moorobo.global.dto.SimpleUserAuth
+import com.moira.moorobo.global.file.dto.FileDownloadDto
+import com.moira.moorobo.global.auth.dto.SimpleUserAuth
 import com.moira.moorobo.global.exception.ErrorCode
 import com.moira.moorobo.global.exception.MooRoboException
-import com.moira.moorobo.global.utility.CookieHandler
-import com.moira.moorobo.global.utility.EntityFinder
-import com.moira.moorobo.global.utility.FileValidator
+import com.moira.moorobo.global.auth.CookieHandler
+import com.moira.moorobo.global.jpa.EntityFinder
+import com.moira.moorobo.global.file.FileValidator
+import com.moira.moorobo.global.file.LocalFileStorageHandler
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.beans.factory.annotation.Value
@@ -34,7 +35,7 @@ class QuestionService(
     private val cookieHandler: CookieHandler,
     private val entityFinder: EntityFinder,
     private val fileValidator: FileValidator,
-    private val localFileStorageService: LocalFileStorageService,
+    private val localFileStorageHandler: LocalFileStorageHandler,
     private val questionFileRepository: QuestionFileRepository,
     private val questionRepository: QuestionRepository
 ) {
@@ -55,7 +56,7 @@ class QuestionService(
         request.files.map { file ->
             // [3-1] 로컬 환경에서는 로컬 파일 환경에 저장
             if ("local".equals(activeProfile, ignoreCase = true)) {
-                val fileInfo = localFileStorageService.saveFile(file = file, targetDir = "questions")
+                val fileInfo = localFileStorageHandler.saveFile(file = file, targetDir = "questions")
                 val questionFile = fileInfo.toQuestionFile(question = savedQuestion)
 
                 questionFileRepository.save(questionFile)
@@ -112,7 +113,7 @@ class QuestionService(
         )
 
         // [1] Resource 객체 획득
-        val resource = localFileStorageService.loadFileAsResource(fileUrl = questionFile.fileUrl)
+        val resource = localFileStorageHandler.loadFileAsResource(fileUrl = questionFile.fileUrl)
 
         // [2] 파일명 인코딩
         val encodedFileName = URLEncoder.encode(
@@ -146,7 +147,7 @@ class QuestionService(
         request.newFiles?.map { file ->
             // [3-1] 로컬 환경에서는 로컬 파일 환경에 저장
             if ("local".equals(activeProfile, ignoreCase = true)) {
-                val fileInfo = localFileStorageService.saveFile(file = file, targetDir = "questions")
+                val fileInfo = localFileStorageHandler.saveFile(file = file, targetDir = "questions")
                 val questionFile = fileInfo.toQuestionFile(question = question)
 
                 questionFileRepository.save(questionFile)
@@ -162,7 +163,7 @@ class QuestionService(
                 fileId = fileId
             )
 
-            localFileStorageService.deleteFile(questionFile.fileUrl) // 파일 시스템
+            localFileStorageHandler.deleteFile(questionFile.fileUrl) // 파일 시스템
             questionFileRepository.delete(questionFile) // DB
         }
     }
@@ -179,7 +180,7 @@ class QuestionService(
         // [2] 파일 삭제
         val fileUrls = questionFileRepository.findAllQuestionFileUrlByQuestionId(questionId)
         fileUrls.map { fileUrl ->
-            localFileStorageService.deleteFile(fileUrl)
+            localFileStorageHandler.deleteFile(fileUrl)
         }
 
         // [3] QuestionFile, Answer, Question 삭제

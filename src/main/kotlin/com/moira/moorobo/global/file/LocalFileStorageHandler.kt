@@ -1,8 +1,8 @@
-package com.moira.moorobo.domain.question.service
+package com.moira.moorobo.global.file
 
-import com.moira.moorobo.global.dto.FileDto
 import com.moira.moorobo.global.exception.ErrorCode
 import com.moira.moorobo.global.exception.MooRoboException
+import com.moira.moorobo.global.file.dto.FileDto
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.core.io.Resource
@@ -12,10 +12,10 @@ import org.springframework.web.multipart.MultipartFile
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
-import java.util.*
+import java.util.UUID
 
 @Service
-class LocalFileStorageService(
+class LocalFileStorageHandler(
     @param:Value("\${file.upload-dir}")
     private val fileUploadDir: String
 ) {

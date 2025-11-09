@@ -6,7 +6,7 @@ import com.moira.moorobo.domain.user.dto.request.SignupRequest
 import com.moira.moorobo.domain.user.dto.response.UserResponse
 import com.moira.moorobo.domain.user.service.UserService
 import com.moira.moorobo.global.auth.UserPrincipal
-import com.moira.moorobo.global.dto.SimpleUserAuth
+import com.moira.moorobo.global.auth.dto.SimpleUserAuth
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 

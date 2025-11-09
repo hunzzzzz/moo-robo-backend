@@ -4,10 +4,10 @@ import com.moira.moorobo.domain.answer.dto.request.AnswerAddRequest
 import com.moira.moorobo.domain.answer.dto.request.AnswerUpdateRequest
 import com.moira.moorobo.domain.answer.dto.response.AnswerResponse
 import com.moira.moorobo.domain.answer.repository.AnswerRepository
-import com.moira.moorobo.global.dto.SimpleUserAuth
+import com.moira.moorobo.global.auth.dto.SimpleUserAuth
 import com.moira.moorobo.global.exception.ErrorCode
 import com.moira.moorobo.global.exception.MooRoboException
-import com.moira.moorobo.global.utility.EntityFinder
+import com.moira.moorobo.global.jpa.EntityFinder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 

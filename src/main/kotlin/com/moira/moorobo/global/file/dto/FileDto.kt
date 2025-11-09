@@ -1,4 +1,4 @@
-package com.moira.moorobo.global.dto
+package com.moira.moorobo.global.file.dto
 
 import com.moira.moorobo.domain.question.entity.Question
 import com.moira.moorobo.domain.question.entity.QuestionFile

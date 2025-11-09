@@ -1,4 +1,4 @@
-package com.moira.moorobo.global.dto
+package com.moira.moorobo.global.auth.dto
 
 data class SimpleUserAuth(
     val userId: String,

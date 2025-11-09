@@ -5,9 +5,9 @@ import com.moira.moorobo.domain.auth.dto.response.LoginResponse
 import com.moira.moorobo.domain.user.repository.UserRepository
 import com.moira.moorobo.global.exception.ErrorCode
 import com.moira.moorobo.global.exception.MooRoboException
-import com.moira.moorobo.global.utility.CookieHandler
-import com.moira.moorobo.global.utility.EntityFinder
-import com.moira.moorobo.global.utility.JwtProvider
+import com.moira.moorobo.global.auth.CookieHandler
+import com.moira.moorobo.global.jpa.EntityFinder
+import com.moira.moorobo.global.auth.JwtProvider
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.http.HttpHeaders

@@ -2,7 +2,7 @@ package com.moira.moorobo.domain.answer.entity
 
 import com.moira.moorobo.domain.question.entity.Question
 import com.moira.moorobo.domain.user.entity.User
-import com.moira.moorobo.global.utility.BaseEntity
+import com.moira.moorobo.global.jpa.BaseEntity
 import jakarta.persistence.*
 
 @Entity

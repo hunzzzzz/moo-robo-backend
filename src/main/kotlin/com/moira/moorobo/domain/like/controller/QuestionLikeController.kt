@@ -2,7 +2,7 @@ package com.moira.moorobo.domain.like.controller
 
 import com.moira.moorobo.domain.like.service.QuestionLikeService
 import com.moira.moorobo.global.auth.UserPrincipal
-import com.moira.moorobo.global.dto.SimpleUserAuth
+import com.moira.moorobo.global.auth.dto.SimpleUserAuth
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping

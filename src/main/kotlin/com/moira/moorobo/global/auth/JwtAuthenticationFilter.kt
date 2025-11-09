@@ -1,8 +1,8 @@
 package com.moira.moorobo.global.auth
 
-import com.moira.moorobo.global.dto.SimpleUserAuth
+import com.moira.moorobo.global.auth.dto.SimpleUserAuth
 import com.moira.moorobo.global.exception.ErrorCode
-import com.moira.moorobo.global.utility.JwtProvider
+import com.moira.moorobo.global.auth.JwtProvider
 import io.jsonwebtoken.ExpiredJwtException
 import io.jsonwebtoken.MalformedJwtException
 import io.jsonwebtoken.UnsupportedJwtException

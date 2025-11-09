@@ -2,8 +2,8 @@ package com.moira.moorobo.domain.like.service
 
 import com.moira.moorobo.domain.like.entity.QuestionLike
 import com.moira.moorobo.domain.like.repository.QuestionLikeRepository
-import com.moira.moorobo.global.dto.SimpleUserAuth
-import com.moira.moorobo.global.utility.EntityFinder
+import com.moira.moorobo.global.auth.dto.SimpleUserAuth
+import com.moira.moorobo.global.jpa.EntityFinder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 

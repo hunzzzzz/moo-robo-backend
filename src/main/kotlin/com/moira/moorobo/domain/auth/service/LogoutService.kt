@@ -1,8 +1,8 @@
 package com.moira.moorobo.domain.auth.service
 
-import com.moira.moorobo.global.dto.SimpleUserAuth
-import com.moira.moorobo.global.utility.CookieHandler
-import com.moira.moorobo.global.utility.EntityFinder
+import com.moira.moorobo.global.auth.dto.SimpleUserAuth
+import com.moira.moorobo.global.auth.CookieHandler
+import com.moira.moorobo.global.jpa.EntityFinder
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional

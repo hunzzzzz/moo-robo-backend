@@ -6,10 +6,10 @@ import com.moira.moorobo.domain.user.dto.request.NicknameUpdateRequest
 import com.moira.moorobo.domain.user.dto.request.SignupRequest
 import com.moira.moorobo.domain.user.dto.response.UserResponse
 import com.moira.moorobo.domain.user.repository.UserRepository
-import com.moira.moorobo.global.dto.SimpleUserAuth
+import com.moira.moorobo.global.auth.dto.SimpleUserAuth
 import com.moira.moorobo.global.exception.ErrorCode
 import com.moira.moorobo.global.exception.MooRoboException
-import com.moira.moorobo.global.utility.EntityFinder
+import com.moira.moorobo.global.jpa.EntityFinder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
