@@ -1,6 +1,7 @@
 package com.moira.moorobo.domain.answer.service
 
 import com.moira.moorobo.domain.answer.dto.request.AnswerAddRequest
+import com.moira.moorobo.domain.answer.dto.response.AnswerResponse
 import com.moira.moorobo.domain.answer.repository.AnswerRepository
 import com.moira.moorobo.global.dto.SimpleUserAuth
 import com.moira.moorobo.global.utility.EntityFinder
@@ -23,5 +24,10 @@ class AnswerService(
         val answer = request.toAnswer(user, question)
 
         answerRepository.save(answer)
+    }
+
+    @Transactional(readOnly = true)
+    fun getAnswers(questionId: Long): List<AnswerResponse> {
+        return answerRepository.getAllAnswerByQuestionId(questionId)
     }
 }

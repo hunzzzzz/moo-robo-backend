@@ -1,8 +1,10 @@
 package com.moira.moorobo.domain.question.service
 
+import com.moira.moorobo.domain.answer.service.AnswerService
 import com.moira.moorobo.domain.question.repository.QuestionRepository
 import com.moira.moorobo.domain.question.dto.request.QuestionAddRequest
 import com.moira.moorobo.domain.question.dto.request.QuestionUpdateRequest
+import com.moira.moorobo.domain.question.dto.response.QuestionDetailDbResponse
 import com.moira.moorobo.domain.question.dto.response.QuestionDetailResponse
 import com.moira.moorobo.domain.question.dto.response.QuestionResponse
 import com.moira.moorobo.global.dto.SimpleUserAuth
@@ -17,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional
 
 @Service
 class QuestionService(
+    private val answerService: AnswerService,
     private val cookieHandler: CookieHandler,
     private val entityFinder: EntityFinder,
     private val questionRepository: QuestionRepository
@@ -33,7 +36,7 @@ class QuestionService(
     fun getMyQuestions(simpleUserAuth: SimpleUserAuth): List<QuestionResponse> {
         val user = entityFinder.findUserById(simpleUserAuth.userId)
 
-        return questionRepository.findAllByUser(user)
+        return questionRepository.findAllQuestionsByUser(user)
     }
 
     @Transactional
@@ -50,9 +53,15 @@ class QuestionService(
             cookieHandler.putQuestionIdInCookie(response = httpServletResponse, questionId = questionId)
         }
 
-        // [2] 게시글 조회
-        return questionRepository.findByQuestionId(questionId)
+        // [2] 게시글 정보 조회
+        val question = questionRepository.findQuestionById(questionId)
             ?: throw MooRoboException(ErrorCode.QUESTION_NOT_FOUND)
+
+        // [3] 댓글 목록 조회
+        val answers = answerService.getAnswers(questionId = questionId)
+
+        // [4] 게시글 + 댓글
+        return QuestionDetailResponse(question = question, answers = answers)
     }
 
     @Transactional

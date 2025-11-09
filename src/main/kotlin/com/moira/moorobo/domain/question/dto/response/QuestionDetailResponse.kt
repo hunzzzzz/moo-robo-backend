@@ -1,21 +1,8 @@
 package com.moira.moorobo.domain.question.dto.response
 
-import java.time.ZonedDateTime
+import com.moira.moorobo.domain.answer.dto.response.AnswerResponse
 
 data class QuestionDetailResponse(
-    // question
-    val questionId: Long,
-    val title: String,
-    val content: String,
-    val aiAnswer: Boolean,
-    val viewCount: Int,
-    val createdAt: ZonedDateTime,
-    val updatedAt: ZonedDateTime,
-
-    // user
-    val userId: String,
-    val nickname: String
-
-    // TODO
-    // comment
+    val question: QuestionDetailDbResponse,
+    val answers: List<AnswerResponse>
 )
