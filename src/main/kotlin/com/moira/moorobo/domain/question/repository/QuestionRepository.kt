@@ -42,14 +42,15 @@ interface QuestionRepository : JpaRepository<Question, Long> {
             Q.createdAt,
             Q.updatedAt,
             U.id AS userId,
-            U.nickname
+            U.nickname,
+            (SELECT COUNT(QL.id) FROM QuestionLike QL WHERE QL.question = Q AND QL.user.id = :userId) AS hasLike
         )
         FROM Question Q
         INNER JOIN User U ON U = Q.user
         WHERE Q.id = :questionId
     """
     )
-    fun findQuestionById(questionId: Long): QuestionDetailDbResponse?
+    fun findQuestionById(questionId: Long, userId: String): QuestionDetailDbResponse?
 
     fun countByUser(user: User): Int
 }

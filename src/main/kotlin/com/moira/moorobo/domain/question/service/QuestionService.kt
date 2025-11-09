@@ -39,7 +39,7 @@ class QuestionService(
     private val questionRepository: QuestionRepository
 ) {
     @Transactional
-    fun add(simpleUserAuth: SimpleUserAuth, request: QuestionAddRequest): QuestionIdResponse {
+    fun addQuestion(simpleUserAuth: SimpleUserAuth, request: QuestionAddRequest): QuestionIdResponse {
         val user = entityFinder.findUserById(simpleUserAuth.userId)
         val question = request.toQuestion(user)
 
@@ -75,6 +75,7 @@ class QuestionService(
 
     @Transactional
     fun getQuestion(
+        simpleUserAuth: SimpleUserAuth,
         httpServletRequest: HttpServletRequest,
         httpServletResponse: HttpServletResponse,
         questionId: Long
@@ -88,8 +89,10 @@ class QuestionService(
         }
 
         // [2] 게시글 정보 조회
-        val question = questionRepository.findQuestionById(questionId)
-            ?: throw MooRoboException(ErrorCode.QUESTION_NOT_FOUND)
+        val question = questionRepository.findQuestionById(
+            questionId = questionId,
+            userId = simpleUserAuth.userId
+        ) ?: throw MooRoboException(ErrorCode.QUESTION_NOT_FOUND)
 
         // [3] 댓글 목록 조회
         val answers = answerService.getAnswers(questionId = questionId)

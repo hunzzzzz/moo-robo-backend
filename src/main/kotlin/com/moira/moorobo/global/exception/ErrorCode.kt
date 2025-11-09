@@ -124,5 +124,10 @@ enum class ErrorCode(val code: String, val message: String, val httpStatus: Http
         code = "Q0013",
         message = "해당 디렉터리 경로에 접근할 수 없습니다.",
         httpStatus = HttpStatus.FORBIDDEN
+    ),
+    LIKE_NOT_FOUND(
+        code = "Q0014",
+        message = "존재하지 않는 좋아요 정보입니다.",
+        httpStatus = HttpStatus.BAD_REQUEST
     )
 }

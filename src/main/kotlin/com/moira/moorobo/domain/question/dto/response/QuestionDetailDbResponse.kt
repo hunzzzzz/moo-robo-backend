@@ -14,5 +14,8 @@ data class QuestionDetailDbResponse(
 
     // user
     val userId: String,
-    val nickname: String
+    val nickname: String,
+
+    // like
+    val hasLike: Long
 )

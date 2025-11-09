@@ -26,7 +26,7 @@ class QuestionController(
         @UserPrincipal simpleUserAuth: SimpleUserAuth,
         @ModelAttribute request: QuestionAddRequest
     ): ResponseEntity<QuestionIdResponse> {
-        val questionIdResponse = questionService.add(simpleUserAuth, request)
+        val questionIdResponse = questionService.addQuestion(simpleUserAuth, request)
 
         return ResponseEntity.ok(questionIdResponse)
     }
@@ -42,11 +42,13 @@ class QuestionController(
 
     @GetMapping("/questions/{questionId}")
     fun getQuestion(
+        @UserPrincipal simpleUserAuth: SimpleUserAuth,
         @PathVariable questionId: Long,
         httpServletRequest: HttpServletRequest,
         httpServletResponse: HttpServletResponse
     ): ResponseEntity<QuestionDetailResponse> {
         val response = questionService.getQuestion(
+            simpleUserAuth = simpleUserAuth,
             questionId = questionId,
             httpServletRequest = httpServletRequest,
             httpServletResponse = httpServletResponse
