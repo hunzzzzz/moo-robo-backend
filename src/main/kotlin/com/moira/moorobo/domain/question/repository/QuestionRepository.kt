@@ -24,11 +24,12 @@ interface QuestionRepository : JpaRepository<Question, Long> {
             (SELECT COUNT(A.id) FROM Answer A WHERE A.question = Q) AS answerCount
         )
         FROM Question Q
-        INNER JOIN User U ON U = Q.user
-        WHERE Q.user = :user
+        INNER JOIN User U ON U.id = Q.user.id
+        WHERE Q.user.id = :userId
+        ORDER BY Q.createdAt DESC
     """
     )
-    fun findAllQuestionsByUser(user: User): List<QuestionResponse>
+    fun findAllQuestionsByUserId(userId: String): List<QuestionResponse>
 
     @Query(
         """
