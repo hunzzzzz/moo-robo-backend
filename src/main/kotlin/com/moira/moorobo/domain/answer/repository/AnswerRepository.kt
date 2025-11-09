@@ -14,6 +14,7 @@ interface AnswerRepository : JpaRepository<Answer, Long> {
             A.id AS answerId,
             A.content,
             A.createdAt,
+            A.aiAnswer,
             U.id AS userId,
             U.role,
             U.nickname
@@ -21,6 +22,7 @@ interface AnswerRepository : JpaRepository<Answer, Long> {
         FROM Answer A
         INNER JOIN User U ON U = A.user
         WHERE A.question.id = :questionId
+        ORDER BY A.createdAt ASC
     """
     )
     fun getAllAnswerByQuestionId(questionId: Long): List<AnswerResponse>

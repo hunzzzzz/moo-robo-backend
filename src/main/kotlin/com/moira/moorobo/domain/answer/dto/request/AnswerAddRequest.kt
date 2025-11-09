@@ -7,7 +7,7 @@ import com.moira.moorobo.domain.user.entity.User
 data class AnswerAddRequest(
     val content: String
 ) {
-    fun toAnswer(user: User, question: Question): Answer {
-        return Answer(user = user, question = question, content = this.content)
+    fun toAnswer(user: User, question: Question, isAiAnswer: Boolean): Answer {
+        return Answer(user = user, question = question, content = this.content, aiAnswer = isAiAnswer)
     }
 }

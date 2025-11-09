@@ -8,6 +8,7 @@ data class AnswerResponse(
     val answerId: Long,
     val content: String,
     val createdAt: ZonedDateTime,
+    val aiAnswer: Boolean,
 
     // user
     val userId: String,

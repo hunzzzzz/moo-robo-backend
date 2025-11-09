@@ -32,8 +32,9 @@ class JwtAuthenticationFilter(
         val EXCLUDE_REQUEST_MATCHERS = listOf(
             PathPatternRequestMatcher.withDefaults().matcher(HttpMethod.GET, "/api/signup/**"),
             PathPatternRequestMatcher.withDefaults().matcher(HttpMethod.POST, "/api/signup/**"),
-            PathPatternRequestMatcher.withDefaults().matcher(HttpMethod.POST, "/api/login/**")
-        );
+            PathPatternRequestMatcher.withDefaults().matcher(HttpMethod.POST, "/api/login/**"),
+            PathPatternRequestMatcher.withDefaults().matcher(HttpMethod.POST, "/api/questions/{questionId}/answers/ai")
+        )
     }
 
     private fun sendErrorResponse(

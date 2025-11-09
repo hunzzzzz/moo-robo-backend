@@ -18,13 +18,17 @@ class AnswerService(
 ) {
     @Transactional
     fun addAnswer(
-        simpleUserAuth: SimpleUserAuth,
+        simpleUserAuth: SimpleUserAuth?,
         request: AnswerAddRequest,
-        questionId: Long
+        questionId: Long,
+        isAiAnswer: Boolean = false
     ) {
-        val user = entityFinder.findUserById(simpleUserAuth.userId)
+        val user = if (isAiAnswer)
+            entityFinder.findUserById("ai")
+        else
+            entityFinder.findUserById(simpleUserAuth?.userId ?: "")
         val question = entityFinder.findQuestionById(questionId)
-        val answer = request.toAnswer(user, question)
+        val answer = request.toAnswer(user, question, isAiAnswer)
 
         answerRepository.save(answer)
     }

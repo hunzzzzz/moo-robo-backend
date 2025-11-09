@@ -22,6 +22,9 @@ class Answer(
     var question: Question,
 
     @Column(name = "content", columnDefinition = "TEXT", nullable = false)
-    var content: String
+    var content: String,
+
+    @Column(name = "ai_answer", nullable = false)
+    var aiAnswer: Boolean = false,
 ) : BaseEntity() {
 }

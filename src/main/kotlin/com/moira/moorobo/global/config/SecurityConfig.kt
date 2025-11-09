@@ -42,6 +42,7 @@ class SecurityConfig(
                     .requestMatchers(HttpMethod.GET, "/api/signup/**").permitAll()
                     .requestMatchers(HttpMethod.POST, "/api/signup/**").permitAll()
                     .requestMatchers(HttpMethod.POST, "/api/login/**").permitAll()
+                    .requestMatchers(HttpMethod.POST, "/api/questions/{questionId}/answers/ai").permitAll()
                     .anyRequest().authenticated()
             }
             // 4. 필터 추가

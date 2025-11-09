@@ -24,6 +24,16 @@ class AnswerController(
         return ResponseEntity.ok(null)
     }
 
+    @PostMapping("/questions/{questionId}/answers/ai")
+    fun addAiAnswer(
+        @RequestBody request: AnswerAddRequest,
+        @PathVariable questionId: Long
+    ): ResponseEntity<Nothing> {
+        answerService.addAnswer(simpleUserAuth = null, request = request, questionId = questionId, isAiAnswer = true)
+
+        return ResponseEntity.ok(null)
+    }
+
     @PutMapping("/questions/{questionId}/answers/{answerId}")
     fun updateAnswer(
         @UserPrincipal simpleUserAuth: SimpleUserAuth,
