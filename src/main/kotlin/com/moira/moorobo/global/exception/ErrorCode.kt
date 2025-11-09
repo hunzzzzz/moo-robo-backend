@@ -64,5 +64,15 @@ enum class ErrorCode(val code: String, val message: String, val httpStatus: Http
         code = "Q00002",
         message = "본인의 질문만 삭제 혹은 수정할 수 있습니다.",
         httpStatus = HttpStatus.UNAUTHORIZED
+    ),
+    ANSWER_NOT_FOUND(
+        code = "Q00003",
+        message = "존재하지 않는 답변입니다.",
+        httpStatus = HttpStatus.BAD_REQUEST
+    ),
+    NOT_YOUR_ANSWER(
+        code = "Q00004",
+        message = "본인의 답변만 삭제 혹은 수정할 수 있습니다.",
+        httpStatus = HttpStatus.UNAUTHORIZED
     )
 }

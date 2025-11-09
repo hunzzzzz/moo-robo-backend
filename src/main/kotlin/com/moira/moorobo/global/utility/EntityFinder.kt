@@ -1,5 +1,6 @@
 package com.moira.moorobo.global.utility
 
+import com.moira.moorobo.domain.answer.repository.AnswerRepository
 import com.moira.moorobo.domain.question.repository.QuestionRepository
 import com.moira.moorobo.domain.user.repository.UserRepository
 import com.moira.moorobo.global.exception.ErrorCode
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Component
 
 @Component
 class EntityFinder(
+    private val answerRepository: AnswerRepository,
     private val questionRepository: QuestionRepository,
     private val userRepository: UserRepository
 ) {
@@ -20,4 +22,7 @@ class EntityFinder(
 
     fun findQuestionById(questionId: Long) = questionRepository.findByIdOrNull(questionId)
         ?: throw MooRoboException(ErrorCode.QUESTION_NOT_FOUND)
+
+    fun findAnswerById(answerId: Long) = answerRepository.findByIdOrNull(answerId)
+        ?: throw MooRoboException(ErrorCode.ANSWER_NOT_FOUND)
 }
