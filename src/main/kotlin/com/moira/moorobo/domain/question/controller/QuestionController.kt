@@ -3,6 +3,7 @@ package com.moira.moorobo.domain.question.controller
 import com.moira.moorobo.domain.question.dto.request.QuestionAddRequest
 import com.moira.moorobo.domain.question.dto.request.QuestionUpdateRequest
 import com.moira.moorobo.domain.question.dto.response.QuestionDetailResponse
+import com.moira.moorobo.domain.question.dto.response.QuestionIdResponse
 import com.moira.moorobo.domain.question.dto.response.QuestionResponse
 import com.moira.moorobo.domain.question.service.QuestionService
 import com.moira.moorobo.global.auth.UserPrincipal
@@ -21,8 +22,10 @@ class QuestionController(
     fun addQuestion(
         @UserPrincipal simpleUserAuth: SimpleUserAuth,
         @ModelAttribute request: QuestionAddRequest
-    ) {
-        questionService.add(simpleUserAuth, request)
+    ): ResponseEntity<QuestionIdResponse> {
+        val questionIdResponse = questionService.add(simpleUserAuth, request)
+
+        return ResponseEntity.ok(questionIdResponse)
     }
 
     @GetMapping("/me/questions")

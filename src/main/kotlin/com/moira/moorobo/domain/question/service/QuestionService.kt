@@ -4,6 +4,7 @@ import com.moira.moorobo.domain.answer.service.AnswerService
 import com.moira.moorobo.domain.question.dto.request.QuestionAddRequest
 import com.moira.moorobo.domain.question.dto.request.QuestionUpdateRequest
 import com.moira.moorobo.domain.question.dto.response.QuestionDetailResponse
+import com.moira.moorobo.domain.question.dto.response.QuestionIdResponse
 import com.moira.moorobo.domain.question.dto.response.QuestionResponse
 import com.moira.moorobo.domain.question.repository.QuestionFileRepository
 import com.moira.moorobo.domain.question.repository.QuestionRepository
@@ -33,7 +34,7 @@ class QuestionService(
     private val questionRepository: QuestionRepository
 ) {
     @Transactional
-    fun add(simpleUserAuth: SimpleUserAuth, request: QuestionAddRequest) {
+    fun add(simpleUserAuth: SimpleUserAuth, request: QuestionAddRequest): QuestionIdResponse {
         val user = entityFinder.findUserById(simpleUserAuth.userId)
         val question = request.toQuestion(user)
 
@@ -57,6 +58,9 @@ class QuestionService(
             // [3-2] 배포 환경에서는 AWS S3에 저장
             // TODO
         }
+
+        // [4] questionId 리턴
+        return QuestionIdResponse(questionId = savedQuestion.id ?: -1L)
     }
 
     @Transactional(readOnly = true)
