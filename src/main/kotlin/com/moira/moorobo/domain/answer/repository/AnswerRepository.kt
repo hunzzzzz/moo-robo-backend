@@ -15,6 +15,7 @@ interface AnswerRepository : JpaRepository<Answer, Long> {
             A.content,
             A.createdAt,
             U.id AS userId,
+            U.role,
             U.nickname
         )
         FROM Answer A
