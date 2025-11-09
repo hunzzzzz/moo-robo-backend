@@ -20,7 +20,7 @@ class QuestionController(
     @PostMapping("/questions")
     fun addQuestion(
         @UserPrincipal simpleUserAuth: SimpleUserAuth,
-        @RequestBody request: QuestionAddRequest
+        @ModelAttribute request: QuestionAddRequest
     ) {
         questionService.add(simpleUserAuth, request)
     }

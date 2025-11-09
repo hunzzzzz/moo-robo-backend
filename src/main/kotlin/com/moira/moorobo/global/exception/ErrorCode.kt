@@ -9,6 +9,11 @@ enum class ErrorCode(val code: String, val message: String, val httpStatus: Http
         message = "알 수 없는 오류가 발생했습니다. 잠시 후 다시 시도해주세요.",
         httpStatus = HttpStatus.INTERNAL_SERVER_ERROR
     ),
+    LOCAL_FILE_SYSTEM_ERROR(
+        code = "S0002",
+        message = "로컬 파일 시스템 환경에서 오류가 발생했습니다.",
+        httpStatus = HttpStatus.INTERNAL_SERVER_ERROR
+    ),
 
     // 권한 관련 에러코드
     INVALID_AUTHORIZATION_HEADER(
@@ -74,5 +79,30 @@ enum class ErrorCode(val code: String, val message: String, val httpStatus: Http
         code = "Q00004",
         message = "본인의 답변만 삭제 혹은 수정할 수 있습니다.",
         httpStatus = HttpStatus.UNAUTHORIZED
+    ),
+    EXCEEDED_MAX_FILE_COUNT(
+        code = "Q00005",
+        message = "최대 10개까지의 파일만 첨부할 수 있습니다.",
+        httpStatus = HttpStatus.BAD_REQUEST
+    ),
+    FILE_SIZE_LIMIT_EXCEEDED(
+        code = "Q00006",
+        message = "최대 5MB 크기의 파일만 첨부할 수 있습니다.",
+        httpStatus = HttpStatus.BAD_REQUEST
+    ),
+    UNSUPPORTED_FILE_EXTENSION(
+        code = "Q00007",
+        message = "지원하지 않는 파일 확장자입니다. (허용 확장자: jpg, jpeg, png, pdf)",
+        httpStatus = HttpStatus.BAD_REQUEST
+    ),
+    INVALID_FILE(
+        code = "Q0008",
+        message = "유효하지 않은 파일입니다.",
+        httpStatus = HttpStatus.BAD_REQUEST
+    ),
+    FILE_SAVE_FAILED(
+        code = "Q0009",
+        message = "파일 저장에 실패하였습니다. 다시 시도해주세요.",
+        httpStatus = HttpStatus.INTERNAL_SERVER_ERROR
     )
 }

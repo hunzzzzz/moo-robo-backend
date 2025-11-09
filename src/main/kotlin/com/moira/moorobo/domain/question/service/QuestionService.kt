@@ -5,22 +5,31 @@ import com.moira.moorobo.domain.question.dto.request.QuestionAddRequest
 import com.moira.moorobo.domain.question.dto.request.QuestionUpdateRequest
 import com.moira.moorobo.domain.question.dto.response.QuestionDetailResponse
 import com.moira.moorobo.domain.question.dto.response.QuestionResponse
+import com.moira.moorobo.domain.question.repository.QuestionFileRepository
 import com.moira.moorobo.domain.question.repository.QuestionRepository
 import com.moira.moorobo.global.dto.SimpleUserAuth
 import com.moira.moorobo.global.exception.ErrorCode
 import com.moira.moorobo.global.exception.MooRoboException
 import com.moira.moorobo.global.utility.CookieHandler
 import com.moira.moorobo.global.utility.EntityFinder
+import com.moira.moorobo.global.utility.FileValidator
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
 class QuestionService(
+    @param:Value("\${spring.profiles.active}")
+    private val activeProfile: String,
+
     private val answerService: AnswerService,
     private val cookieHandler: CookieHandler,
     private val entityFinder: EntityFinder,
+    private val fileValidator: FileValidator,
+    private val localFileStorageService: LocalFileStorageService,
+    private val questionFileRepository: QuestionFileRepository,
     private val questionRepository: QuestionRepository
 ) {
     @Transactional
@@ -28,13 +37,30 @@ class QuestionService(
         val user = entityFinder.findUserById(simpleUserAuth.userId)
         val question = request.toQuestion(user)
 
-        questionRepository.save(question)
+        // [1] 첨부파일 검증
+        if (!request.files.isEmpty()) {
+            fileValidator.validateFiles(files = request.files)
+        }
+
+        // [2] Question 객체 저장
+        val savedQuestion = questionRepository.save(question)
+
+        // [3] 파일 저장
+        request.files.map { file ->
+            // [3-1] 로컬 환경에서는 로컬 파일 환경에 저장
+            if ("local".equals(activeProfile, ignoreCase = true)) {
+                val fileInfo = localFileStorageService.saveFile(file = file, targetDir = "questions")
+                val questionFile = fileInfo.toQuestionFile(question = savedQuestion)
+
+                questionFileRepository.save(questionFile)
+            }
+            // [3-2] 배포 환경에서는 AWS S3에 저장
+            // TODO
+        }
     }
 
     @Transactional(readOnly = true)
     fun getMyQuestions(simpleUserAuth: SimpleUserAuth): List<QuestionResponse> {
-//        val user = entityFinder.findUserById(simpleUserAuth.userId)
-
         return questionRepository.findAllQuestionsByUserId(simpleUserAuth.userId)
     }
 
