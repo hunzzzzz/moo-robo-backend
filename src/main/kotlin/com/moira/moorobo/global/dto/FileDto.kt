@@ -3,7 +3,7 @@ package com.moira.moorobo.global.dto
 import com.moira.moorobo.domain.question.entity.Question
 import com.moira.moorobo.domain.question.entity.QuestionFile
 
-data class QuestionFileDto(
+data class FileDto(
     val fileId: String,
     val originalFileName: String,
     val storedFileName: String,

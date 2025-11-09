@@ -22,4 +22,6 @@ interface QuestionFileRepository : JpaRepository<QuestionFile, String> {
     """
     )
     fun findAllQuestionFileByQuestionId(questionId: Long): List<QuestionFileResponse>
+
+    fun findQuestionFileByQuestionIdAndId(questionId: Long, id: String): QuestionFile?
 }

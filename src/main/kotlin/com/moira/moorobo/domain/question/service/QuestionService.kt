@@ -8,6 +8,7 @@ import com.moira.moorobo.domain.question.dto.response.QuestionIdResponse
 import com.moira.moorobo.domain.question.dto.response.QuestionResponse
 import com.moira.moorobo.domain.question.repository.QuestionFileRepository
 import com.moira.moorobo.domain.question.repository.QuestionRepository
+import com.moira.moorobo.global.dto.FileDownloadDto
 import com.moira.moorobo.global.dto.SimpleUserAuth
 import com.moira.moorobo.global.exception.ErrorCode
 import com.moira.moorobo.global.exception.MooRoboException
@@ -19,6 +20,8 @@ import jakarta.servlet.http.HttpServletResponse
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 @Service
 class QuestionService(
@@ -94,6 +97,26 @@ class QuestionService(
 
         // [5] 게시글 + 댓글 + 파일
         return QuestionDetailResponse(question = question, answers = answers, files = files)
+    }
+
+    @Transactional(readOnly = true)
+    fun downloadFile(questionId: Long, fileId: String): FileDownloadDto {
+        val questionFile = entityFinder.findQuestionFileByQuestionIdAndId(
+            questionId = questionId,
+            fileId = fileId
+        )
+
+        // [1] Resource 객체 획득
+        val resource = localFileStorageService.loadFileAsResource(fileUrl = questionFile.fileUrl)
+
+        // [2] 파일명 인코딩
+        val encodedFileName = URLEncoder.encode(
+            questionFile.originalFileName,
+            StandardCharsets.UTF_8.toString()
+        ).replace("+", "%20")
+
+        // [3] Resource와 인코딩된 파일명 리턴
+        return FileDownloadDto(encodedFileName = encodedFileName, resource = resource)
     }
 
     @Transactional

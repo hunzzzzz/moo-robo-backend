@@ -10,6 +10,9 @@ import com.moira.moorobo.global.auth.UserPrincipal
 import com.moira.moorobo.global.dto.SimpleUserAuth
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
+import org.springframework.core.io.Resource
+import org.springframework.http.HttpHeaders
+import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
@@ -50,6 +53,19 @@ class QuestionController(
         )
 
         return ResponseEntity.ok(response)
+    }
+
+    @GetMapping("/questions/{questionId}/files/{fileId}")
+    fun downloadFile(
+        @PathVariable questionId: Long,
+        @PathVariable fileId: String
+    ): ResponseEntity<Resource> {
+        val fileDownloadDto = questionService.downloadFile(questionId = questionId, fileId = fileId)
+
+        return ResponseEntity.ok()
+            .contentType(MediaType.parseMediaType(MediaType.APPLICATION_OCTET_STREAM_VALUE))
+            .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"${fileDownloadDto.encodedFileName}\"")
+            .body(fileDownloadDto.resource)
     }
 
     @PutMapping("/questions/{questionId}")

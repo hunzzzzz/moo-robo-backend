@@ -1,10 +1,12 @@
 package com.moira.moorobo.domain.question.service
 
-import com.moira.moorobo.global.dto.QuestionFileDto
+import com.moira.moorobo.global.dto.FileDto
 import com.moira.moorobo.global.exception.ErrorCode
 import com.moira.moorobo.global.exception.MooRoboException
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.core.io.Resource
+import org.springframework.core.io.UrlResource
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 import java.nio.file.Files
@@ -33,7 +35,7 @@ class LocalFileStorageService(
         }
     }
 
-    fun saveFile(file: MultipartFile, targetDir: String): QuestionFileDto {
+    fun saveFile(file: MultipartFile, targetDir: String): FileDto {
         // 원본 파일명 (사용자가 지정한 파일명)
         val originalFileName = file.originalFilename ?: throw MooRoboException(ErrorCode.INVALID_FILE)
         // 파일 확장자
@@ -66,7 +68,7 @@ class LocalFileStorageService(
             file.transferTo(targetPath.toFile())
 
             // [4] DB 저장을 위한 DTO 반환
-            return QuestionFileDto(
+            return FileDto(
                 fileId = fileId,
                 size = file.size,
                 originalFileName = originalFileName,
@@ -76,6 +78,27 @@ class LocalFileStorageService(
         } catch (e: Exception) {
             log.error("파일 저장 실패: {}", e.message, e)
             throw MooRoboException(ErrorCode.FILE_SAVE_FAILED)
+        }
+    }
+
+    fun loadFileAsResource(fileUrl: String): Resource {
+        try {
+            // [1] DB에 저장된 파일 경로를 Path로 변환
+            val filePath = Paths.get(fileUrl).normalize()
+
+            // [2] Path를 URI로 변환하여 UrlResource 객체 생성
+            val resource = UrlResource(filePath.toUri())
+
+            // [3] Resource 유효성 검사 후 리턴
+            if (resource.exists() && resource.isReadable) {
+                return resource
+            } else {
+                log.error("파일을 찾을 수 없거나 읽을 수 없습니다: {}", fileUrl)
+                throw MooRoboException(ErrorCode.QUESTION_FILE_NOT_FOUND)
+            }
+        } catch (e: Exception) {
+            log.error("파일 로드 실패: {}", e.message, e)
+            throw MooRoboException(ErrorCode.FILE_LOAD_FAILED)
         }
     }
 }

@@ -104,5 +104,15 @@ enum class ErrorCode(val code: String, val message: String, val httpStatus: Http
         code = "Q0009",
         message = "파일 저장에 실패하였습니다. 다시 시도해주세요.",
         httpStatus = HttpStatus.INTERNAL_SERVER_ERROR
+    ),
+    FILE_LOAD_FAILED(
+        code = "Q0010",
+        message = "파일 로드에 실패하였습니다. 새로고침 후 다시 시도해주세요.",
+        httpStatus = HttpStatus.INTERNAL_SERVER_ERROR
+    ),
+    QUESTION_FILE_NOT_FOUND(
+        code = "Q0011",
+        message = "존재하지 않는 파일입니다.",
+        httpStatus = HttpStatus.BAD_REQUEST
     )
 }
