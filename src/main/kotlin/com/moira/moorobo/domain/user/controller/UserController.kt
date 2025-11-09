@@ -1,17 +1,14 @@
 package com.moira.moorobo.domain.user.controller
 
+import com.moira.moorobo.domain.user.dto.request.EmailUpdateRequest
+import com.moira.moorobo.domain.user.dto.request.NicknameUpdateRequest
 import com.moira.moorobo.domain.user.dto.request.SignupRequest
 import com.moira.moorobo.domain.user.dto.response.UserResponse
 import com.moira.moorobo.domain.user.service.UserService
 import com.moira.moorobo.global.auth.UserPrincipal
 import com.moira.moorobo.global.dto.SimpleUserAuth
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api")
@@ -26,14 +23,14 @@ class UserController(
     }
 
     @GetMapping("/signup/check/nickname")
-    fun checkNickname(@RequestParam nickname: String): ResponseEntity<Nothing> {
+    fun checkNicknameWhenSignup(@RequestParam nickname: String): ResponseEntity<Nothing> {
         userService.checkNickname(nickname)
 
         return ResponseEntity.ok().body(null)
     }
 
     @GetMapping("/signup/check/email")
-    fun checkEmail(@RequestParam email: String): ResponseEntity<Nothing> {
+    fun checkEmailWhenSignup(@RequestParam email: String): ResponseEntity<Nothing> {
         userService.checkEmail(email)
 
         return ResponseEntity.ok().body(null)
@@ -49,5 +46,45 @@ class UserController(
         val response = userService.getProfile(simpleUserAuth.userId)
 
         return ResponseEntity.ok(response)
+    }
+
+    @GetMapping("/users/check/nickname")
+    fun checkNickname(
+        @UserPrincipal simpleUserAuth: SimpleUserAuth,
+        @RequestParam nickname: String
+    ): ResponseEntity<Nothing> {
+        userService.checkNickname(simpleUserAuth, nickname)
+
+        return ResponseEntity.ok().body(null)
+    }
+
+    @GetMapping("/users/check/email")
+    fun checkEmail(
+        @UserPrincipal simpleUserAuth: SimpleUserAuth,
+        @RequestParam email: String
+    ): ResponseEntity<Nothing> {
+        userService.checkEmail(simpleUserAuth, email)
+
+        return ResponseEntity.ok().body(null)
+    }
+
+    @PutMapping("/me/nickname")
+    fun updateNickname(
+        @UserPrincipal simpleUserAuth: SimpleUserAuth,
+        @RequestBody request: NicknameUpdateRequest
+    ): ResponseEntity<Nothing> {
+        userService.updateNickname(simpleUserAuth, request)
+
+        return ResponseEntity.ok().body(null)
+    }
+
+    @PutMapping("/me/email")
+    fun updateEmail(
+        @UserPrincipal simpleUserAuth: SimpleUserAuth,
+        @RequestBody request: EmailUpdateRequest
+    ): ResponseEntity<Nothing> {
+        userService.updateEmail(simpleUserAuth, request)
+
+        return ResponseEntity.ok().body(null)
     }
 }
