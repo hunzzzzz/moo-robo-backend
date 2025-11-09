@@ -4,5 +4,6 @@ import com.moira.moorobo.domain.answer.dto.response.AnswerResponse
 
 data class QuestionDetailResponse(
     val question: QuestionDetailDbResponse,
-    val answers: List<AnswerResponse>
+    val answers: List<AnswerResponse>,
+    val files: List<QuestionFileResponse>
 )

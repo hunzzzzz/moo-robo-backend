@@ -85,8 +85,11 @@ class QuestionService(
         // [3] 댓글 목록 조회
         val answers = answerService.getAnswers(questionId = questionId)
 
-        // [4] 게시글 + 댓글
-        return QuestionDetailResponse(question = question, answers = answers)
+        // [4] 파일 정보 조회
+        val files = questionFileRepository.findAllQuestionFileByQuestionId(questionId = questionId)
+
+        // [5] 게시글 + 댓글 + 파일
+        return QuestionDetailResponse(question = question, answers = answers, files = files)
     }
 
     @Transactional

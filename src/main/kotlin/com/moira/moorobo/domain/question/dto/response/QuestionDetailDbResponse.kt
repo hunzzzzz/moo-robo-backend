@@ -15,7 +15,4 @@ data class QuestionDetailDbResponse(
     // user
     val userId: String,
     val nickname: String
-
-    // TODO
-    // comment
 )
