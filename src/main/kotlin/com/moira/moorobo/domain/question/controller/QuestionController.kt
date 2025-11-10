@@ -5,6 +5,7 @@ import com.moira.moorobo.domain.question.dto.request.QuestionUpdateRequest
 import com.moira.moorobo.domain.question.dto.response.QuestionDetailResponse
 import com.moira.moorobo.domain.question.dto.response.QuestionIdResponse
 import com.moira.moorobo.domain.question.dto.response.QuestionResponse
+import com.moira.moorobo.domain.question.dto.response.WeeklyTopQuestionsResponse
 import com.moira.moorobo.domain.question.service.QuestionService
 import com.moira.moorobo.global.auth.UserPrincipal
 import com.moira.moorobo.global.auth.dto.SimpleUserAuth
@@ -36,6 +37,13 @@ class QuestionController(
         @UserPrincipal simpleUserAuth: SimpleUserAuth
     ): ResponseEntity<List<QuestionResponse>> {
         val list = questionService.getMyQuestions(simpleUserAuth)
+
+        return ResponseEntity.ok(list)
+    }
+
+    @GetMapping("/questions/weekly/top")
+    fun getWeeklyTopQuestions(): ResponseEntity<WeeklyTopQuestionsResponse?> {
+        val list = questionService.getWeeklyTopQuestions()
 
         return ResponseEntity.ok(list)
     }

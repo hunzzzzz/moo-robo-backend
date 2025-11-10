@@ -7,6 +7,7 @@ import com.moira.moorobo.domain.user.entity.User
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.stereotype.Repository
+import java.time.ZonedDateTime
 
 @Repository
 interface QuestionRepository : JpaRepository<Question, Long> {
@@ -53,6 +54,80 @@ interface QuestionRepository : JpaRepository<Question, Long> {
     """
     )
     fun findQuestionById(questionId: Long, userId: String): QuestionDetailDbResponse?
+
+    @Query(
+        """
+        SELECT new com.moira.moorobo.domain.question.dto.response.QuestionResponse(
+            Q.id AS questionId,
+            Q.title,
+            Q.content,
+            Q.viewCount,
+            Q.createdAt,
+            Q.updatedAt,
+            U.id AS userId,
+            U.nickname,
+            (SELECT COUNT(A.id) FROM Answer A WHERE A.question = Q) AS answerCount,
+            A.likeCount AS likeCount
+        )
+        FROM Question Q
+        INNER JOIN (
+            SELECT 
+                B.questionId AS questionId,
+                B.likeCount AS likeCount,
+                RANK() OVER (ORDER BY B.likeCount DESC) AS rankNum
+            FROM
+            (
+                SELECT 
+                    QL.question.id AS questionId,
+                    COUNT(QL.question.id) AS likeCount
+                FROM QuestionLike QL
+                WHERE QL.likeAt BETWEEN :startDate AND :endDate
+                GROUP BY QL.question.id
+            ) B
+        ) A
+        ON A.questionId = Q.id AND CAST(A.rankNum AS biginteger) = 1
+        INNER JOIN User U 
+        ON U = Q.user
+    """
+    )
+    fun findWeeklyMostLikedQuestions(startDate: ZonedDateTime, endDate: ZonedDateTime): List<QuestionResponse>
+
+    @Query(
+        """
+        SELECT new com.moira.moorobo.domain.question.dto.response.QuestionResponse(
+            Q.id AS questionId,
+            Q.title,
+            Q.content,
+            Q.viewCount,
+            Q.createdAt,
+            Q.updatedAt,
+            U.id AS userId,
+            U.nickname,
+            (SELECT COUNT(A.id) FROM Answer A WHERE A.question = Q) AS answerCount,
+            A.likeCount AS likeCount
+        )
+        FROM Question Q
+        INNER JOIN (
+            SELECT 
+                B.questionId AS questionId,
+                B.likeCount AS likeCount,
+                RANK() OVER (ORDER BY B.likeCount DESC) AS rankNum
+            FROM
+            (
+                SELECT 
+                    A.question.id AS questionId,
+                    COUNT(A.question.id) AS likeCount
+                FROM Answer A
+                WHERE A.createdAt BETWEEN :startDate AND :endDate
+                GROUP BY A.question.id
+            ) B
+        ) A
+        ON A.questionId = Q.id AND CAST(A.rankNum AS biginteger) = 1
+        INNER JOIN User U 
+        ON U = Q.user
+    """
+    )
+    fun findWeeklyMostCommentedQuestions(startDate: ZonedDateTime, endDate: ZonedDateTime): List<QuestionResponse>
 
     fun countByUser(user: User): Int
 }

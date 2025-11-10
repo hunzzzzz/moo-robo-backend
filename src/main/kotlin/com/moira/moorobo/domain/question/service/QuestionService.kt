@@ -7,16 +7,17 @@ import com.moira.moorobo.domain.question.dto.request.QuestionUpdateRequest
 import com.moira.moorobo.domain.question.dto.response.QuestionDetailResponse
 import com.moira.moorobo.domain.question.dto.response.QuestionIdResponse
 import com.moira.moorobo.domain.question.dto.response.QuestionResponse
+import com.moira.moorobo.domain.question.dto.response.WeeklyTopQuestionsResponse
 import com.moira.moorobo.domain.question.repository.QuestionFileRepository
 import com.moira.moorobo.domain.question.repository.QuestionRepository
-import com.moira.moorobo.global.file.dto.FileDownloadDto
+import com.moira.moorobo.global.auth.CookieHandler
 import com.moira.moorobo.global.auth.dto.SimpleUserAuth
 import com.moira.moorobo.global.exception.ErrorCode
 import com.moira.moorobo.global.exception.MooRoboException
-import com.moira.moorobo.global.auth.CookieHandler
-import com.moira.moorobo.global.jpa.EntityFinder
 import com.moira.moorobo.global.file.FileValidator
 import com.moira.moorobo.global.file.LocalFileStorageHandler
+import com.moira.moorobo.global.file.dto.FileDownloadDto
+import com.moira.moorobo.global.jpa.EntityFinder
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.beans.factory.annotation.Value
@@ -24,6 +25,8 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
+import java.time.ZoneId
+import java.time.ZonedDateTime
 
 @Service
 class QuestionService(
@@ -72,6 +75,31 @@ class QuestionService(
     @Transactional(readOnly = true)
     fun getMyQuestions(simpleUserAuth: SimpleUserAuth): List<QuestionResponse> {
         return questionRepository.findAllQuestionsByUserId(simpleUserAuth.userId)
+    }
+
+    @Transactional(readOnly = true)
+    fun getWeeklyTopQuestions(): WeeklyTopQuestionsResponse {
+        // 기준일 계산
+        val today = ZonedDateTime.now(ZoneId.of("Asia/Seoul"))
+        val endDate = today.plusDays(1)
+        val startDate = endDate.minusDays(7)
+
+        // 일주일 간 좋아요 수가 가장 많은 게시글
+        val mostLikedQuestions =
+            questionRepository.findWeeklyMostLikedQuestions(startDate = startDate, endDate = endDate)
+        val mostLikedQuestion =
+            if (mostLikedQuestions.size > 1) mostLikedQuestions.random() else mostLikedQuestions[0]
+
+        // 일주일 간 댓글 수가 가장 많은 게시글
+        val mostCommentedQuestions =
+            questionRepository.findWeeklyMostCommentedQuestions(startDate = startDate, endDate = endDate)
+        val mostCommentedQuestion =
+            if (mostCommentedQuestions.size > 1) mostCommentedQuestions.random() else mostCommentedQuestions[0]
+
+        return WeeklyTopQuestionsResponse(
+            mostLiked = mostLikedQuestion,
+            mostCommented = mostCommentedQuestion
+        )
     }
 
     @Transactional
