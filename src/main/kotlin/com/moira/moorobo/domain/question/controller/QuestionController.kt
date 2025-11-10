@@ -12,6 +12,7 @@ import com.moira.moorobo.global.auth.dto.SimpleUserAuth
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.core.io.Resource
+import org.springframework.data.domain.Page
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -34,9 +35,13 @@ class QuestionController(
 
     @GetMapping("/me/questions")
     fun getMyQuestions(
-        @UserPrincipal simpleUserAuth: SimpleUserAuth
-    ): ResponseEntity<List<QuestionResponse>> {
-        val list = questionService.getMyQuestions(simpleUserAuth)
+        @UserPrincipal simpleUserAuth: SimpleUserAuth,
+        @RequestParam(required = false, defaultValue = "1") page: Int,
+    ): ResponseEntity<Page<QuestionResponse>> {
+        val list = questionService.getMyQuestions(
+            simpleUserAuth = simpleUserAuth,
+            page = page
+        )
 
         return ResponseEntity.ok(list)
     }

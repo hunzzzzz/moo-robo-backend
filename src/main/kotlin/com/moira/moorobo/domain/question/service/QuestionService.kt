@@ -21,6 +21,8 @@ import com.moira.moorobo.global.jpa.EntityFinder
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.net.URLEncoder
@@ -42,6 +44,10 @@ class QuestionService(
     private val questionFileRepository: QuestionFileRepository,
     private val questionRepository: QuestionRepository
 ) {
+    companion object {
+        const val QUESTION_PAGE_SIZE = 3
+    }
+
     @Transactional
     fun addQuestion(simpleUserAuth: SimpleUserAuth, request: QuestionAddRequest): QuestionIdResponse {
         val user = entityFinder.findUserById(simpleUserAuth.userId)
@@ -73,8 +79,14 @@ class QuestionService(
     }
 
     @Transactional(readOnly = true)
-    fun getMyQuestions(simpleUserAuth: SimpleUserAuth): List<QuestionResponse> {
-        return questionRepository.findAllQuestionsByUserId(simpleUserAuth.userId)
+    fun getMyQuestions(
+        simpleUserAuth: SimpleUserAuth,
+        page: Int
+    ): Page<QuestionResponse> {
+        return questionRepository.findMyQuestions(
+            userId = simpleUserAuth.userId,
+            pageable = PageRequest.of(page - 1, QUESTION_PAGE_SIZE)
+        )
     }
 
     @Transactional(readOnly = true)

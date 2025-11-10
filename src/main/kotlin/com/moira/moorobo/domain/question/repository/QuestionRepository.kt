@@ -4,6 +4,8 @@ import com.moira.moorobo.domain.question.dto.response.QuestionDetailDbResponse
 import com.moira.moorobo.domain.question.dto.response.QuestionResponse
 import com.moira.moorobo.domain.question.entity.Question
 import com.moira.moorobo.domain.user.entity.User
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.stereotype.Repository
@@ -31,7 +33,7 @@ interface QuestionRepository : JpaRepository<Question, Long> {
         ORDER BY Q.createdAt DESC
     """
     )
-    fun findAllQuestionsByUserId(userId: String): List<QuestionResponse>
+    fun findMyQuestions(userId: String, pageable: Pageable): Page<QuestionResponse>
 
     @Query(
         """
