@@ -1,5 +1,6 @@
 package com.moira.moorobo.global.config
 
+import com.moira.moorobo.global.auth.ExceptionHandlerFilter
 import com.moira.moorobo.global.auth.JwtAuthenticationFilter
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -16,6 +17,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 class SecurityConfig(
+    private val exceptionHandlerFilter: ExceptionHandlerFilter,
     private val jwtAuthenticationFilter: JwtAuthenticationFilter
 ) {
     @Bean
@@ -46,6 +48,7 @@ class SecurityConfig(
                     .anyRequest().authenticated()
             }
             // 4. 필터 추가
+            .addFilterBefore(exceptionHandlerFilter, UsernamePasswordAuthenticationFilter::class.java)
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
 
         return http.build()
