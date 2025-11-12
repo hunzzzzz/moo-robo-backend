@@ -1,4 +1,4 @@
-package com.moira.moorobo.global.auth
+package com.moira.moorobo.global.auth.filter
 
 import com.moira.moorobo.global.exception.ErrorCode
 import com.moira.moorobo.global.exception.MooRoboException

@@ -1,4 +1,4 @@
-package com.moira.moorobo.global.auth
+package com.moira.moorobo.global.auth.filter
 
 import com.moira.moorobo.global.auth.dto.SimpleUserAuth
 import com.moira.moorobo.global.exception.ErrorCode
@@ -93,7 +93,7 @@ class JwtAuthenticationFilter(
                 )
 
                 // [5] Spring Security 권한 및 Authentication 객체 생성
-                val authorities = listOf(role).map { SimpleGrantedAuthority(it) }
+                val authorities = listOf("ROLE_$role").map { SimpleGrantedAuthority(it) }
                 val authentication = UsernamePasswordAuthenticationToken(simpleUserAuth, null, authorities)
                 SecurityContextHolder.getContext().authentication = authentication
 

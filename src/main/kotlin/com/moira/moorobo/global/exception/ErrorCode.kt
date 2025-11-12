@@ -36,6 +36,11 @@ enum class ErrorCode(val code: String, val message: String, val httpStatus: Http
         message = "토큰 서명이 유효하지 않거나 형식이 올바르지 않습니다.",
         httpStatus = HttpStatus.UNAUTHORIZED
     ),
+    ACCESS_DENIED(
+        code = "A0005",
+        message = "접근 권한이 없습니다.",
+        httpStatus = HttpStatus.FORBIDDEN
+    ),
 
     // 유저 관련 에러코드
     ALREADY_USING_NICKNAME(
