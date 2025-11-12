@@ -1,8 +1,8 @@
 package com.moira.moorobo.global.auth.filter
 
+import com.moira.moorobo.global.auth.JwtProvider
 import com.moira.moorobo.global.auth.dto.SimpleUserAuth
 import com.moira.moorobo.global.exception.ErrorCode
-import com.moira.moorobo.global.auth.JwtProvider
 import io.jsonwebtoken.ExpiredJwtException
 import io.jsonwebtoken.MalformedJwtException
 import io.jsonwebtoken.UnsupportedJwtException
@@ -13,17 +13,16 @@ import jakarta.servlet.http.HttpServletResponse
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
-import org.springframework.http.MediaType
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher
 import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
-import java.time.ZonedDateTime
 
 @Component
 class JwtAuthenticationFilter(
+    private val filterErrorSender: FilterErrorSender,
     private val jwtProvider: JwtProvider
 ) : OncePerRequestFilter() {
     private val log = LoggerFactory.getLogger(JwtAuthenticationFilter::class.java)
@@ -35,21 +34,6 @@ class JwtAuthenticationFilter(
             PathPatternRequestMatcher.withDefaults().matcher(HttpMethod.POST, "/api/login/**"),
             PathPatternRequestMatcher.withDefaults().matcher(HttpMethod.POST, "/api/questions/{questionId}/answers/ai")
         )
-    }
-
-    private fun sendErrorResponse(
-        response: HttpServletResponse,
-        errorCode: ErrorCode
-    ) {
-        response.status = errorCode.httpStatus.value()
-        response.contentType = MediaType.APPLICATION_JSON_VALUE
-        response.characterEncoding = "UTF-8"
-
-        val errorResponse = """
-            {"message": "${errorCode.message}", "errorCode": "${errorCode.code}", "time": "${ZonedDateTime.now()}"}
-        """.trimIndent()
-
-        response.writer.write(errorResponse)
     }
 
     override fun shouldNotFilter(request: HttpServletRequest): Boolean {
@@ -67,7 +51,7 @@ class JwtAuthenticationFilter(
         val authorizationHeaderValue = request.getHeader(HttpHeaders.AUTHORIZATION)
 
         if (authorizationHeaderValue == null || !authorizationHeaderValue.startsWith("Bearer ")) {
-            this.sendErrorResponse(response = response, errorCode = ErrorCode.INVALID_AUTHORIZATION_HEADER)
+            filterErrorSender.sendErrorResponse(response = response, errorCode = ErrorCode.INVALID_AUTHORIZATION_HEADER)
             return
         }
 
@@ -102,28 +86,43 @@ class JwtAuthenticationFilter(
             .onFailure {
                 when (it) {
                     is ExpiredJwtException -> {
-                        this.sendErrorResponse(response = response, errorCode = ErrorCode.EXPIRED_ATK)
+                        filterErrorSender.sendErrorResponse(
+                            response = response,
+                            errorCode = ErrorCode.EXPIRED_ATK
+                        )
                         return
                     }
 
                     is SignatureException -> {
-                        this.sendErrorResponse(response = response, errorCode = ErrorCode.INVALID_SIGNATURE)
+                        filterErrorSender.sendErrorResponse(
+                            response = response,
+                            errorCode = ErrorCode.INVALID_SIGNATURE
+                        )
                         return
                     }
 
                     is UnsupportedJwtException -> {
-                        this.sendErrorResponse(response = response, errorCode = ErrorCode.INVALID_TOKEN)
+                        filterErrorSender.sendErrorResponse(
+                            response = response,
+                            errorCode = ErrorCode.INVALID_TOKEN
+                        )
                         return
                     }
 
                     is MalformedJwtException -> {
-                        this.sendErrorResponse(response = response, errorCode = ErrorCode.INVALID_TOKEN)
+                        filterErrorSender.sendErrorResponse(
+                            response = response,
+                            errorCode = ErrorCode.INVALID_TOKEN
+                        )
                         return
                     }
 
                     else -> {
                         log.error("e: ", it)
-                        this.sendErrorResponse(response = response, errorCode = ErrorCode.INTERNAL_SYSTEM_ERROR)
+                        filterErrorSender.sendErrorResponse(
+                            response = response,
+                            errorCode = ErrorCode.INTERNAL_SYSTEM_ERROR
+                        )
                         return
                     }
                 }
