@@ -114,6 +114,17 @@ class QuestionService(
         )
     }
 
+    @Transactional(readOnly = true)
+    fun search(
+        page: Int,
+        keyword: String
+    ): Page<QuestionResponse> {
+        return questionRepository.search(
+            keyword = keyword,
+            pageable = PageRequest.of(page - 1, QUESTION_PAGE_SIZE)
+        )
+    }
+
     @Transactional
     fun getQuestion(
         simpleUserAuth: SimpleUserAuth,

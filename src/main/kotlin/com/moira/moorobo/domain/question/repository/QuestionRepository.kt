@@ -131,5 +131,25 @@ interface QuestionRepository : JpaRepository<Question, Long> {
     )
     fun findWeeklyMostCommentedQuestions(startDate: ZonedDateTime, endDate: ZonedDateTime): List<QuestionResponse>
 
+    @Query("""
+        SELECT new com.moira.moorobo.domain.question.dto.response.QuestionResponse(
+            Q.id AS questionId,
+            Q.title,
+            Q.content,
+            Q.viewCount,
+            Q.createdAt,
+            Q.updatedAt,
+            U.id AS userId,
+            U.nickname,
+            (SELECT COUNT(A.id) FROM Answer A WHERE A.question = Q) AS answerCount,
+            (SELECT COUNT(QL.id) FROM QuestionLike QL WHERE QL.question = Q) AS likeCount
+        )
+        FROM Question Q
+        INNER JOIN User U ON U.id = Q.user.id
+        WHERE (Q.title LIKE %:keyword% OR Q.content LIKE %:keyword%)
+        ORDER BY Q.createdAt DESC
+    """)
+    fun search(keyword: String, pageable: Pageable): Page<QuestionResponse>
+
     fun countByUser(user: User): Int
 }

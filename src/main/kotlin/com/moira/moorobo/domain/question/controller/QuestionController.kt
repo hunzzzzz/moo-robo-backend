@@ -53,6 +53,16 @@ class QuestionController(
         return ResponseEntity.ok(list)
     }
 
+    @GetMapping("/questions/search")
+    fun search(
+        @RequestParam(required = false, defaultValue = "") keyword: String,
+        @RequestParam(required = false, defaultValue = "1") page: Int
+    ): ResponseEntity<Page<QuestionResponse>> {
+        val list = questionService.search(page = page, keyword = keyword)
+
+        return ResponseEntity.ok(list)
+    }
+
     @GetMapping("/questions/{questionId}")
     fun getQuestion(
         @UserPrincipal simpleUserAuth: SimpleUserAuth,
